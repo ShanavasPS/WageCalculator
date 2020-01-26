@@ -6,38 +6,36 @@
  * @flow
  */
 
-import React, { Component } from "react";
-import { Navigation } from "react-native-navigation";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  StyleSheet
-} from "react-native";
+import React, { Component } from 'react';
+import { Navigation } from 'react-native-navigation';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import AsyncStorage from "@react-native-community/async-storage";
-
-import { goToTabs } from "../../navigation";
+import { goToTabs } from '../../navigation';
 
 export default class Login extends Component {
+
   static get options() {
     return {
       topBar: {
-        visible: false // need to set this because screens in a stack navigation have a header by default
+        visible: false,
+        title: {
+          text: 'Login'
+        }
       }
     };
   }
 
   state = {
-    username: ""
-  };
+    username: ''
+  }
+
 
   render() {
     return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
+
           <View style={styles.main}>
             <View style={styles.fieldContainer}>
               <Text style={styles.label}>Enter your username</Text>
@@ -48,19 +46,35 @@ export default class Login extends Component {
             </View>
 
             <Button title="Login" color="#0064e1" onPress={this.login} />
-
             <TouchableOpacity onPress={this.goToForgotPassword}>
               <View style={styles.center}>
                 <Text style={styles.link_text}>Forgot Password</Text>
               </View>
             </TouchableOpacity>
+
           </View>
         </View>
       </View>
     );
   }
 
-  // next: add login code
+  //
+  login = async () => {
+    const { username } = this.state;
+    if (username) {
+      await AsyncStorage.setItem('username', username);
+      goToTabs(global.icons, username);
+    }
+  }
+
+  goToForgotPassword = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'ForgotPasswordScreen',
+      }
+    });
+  }
+
 }
 //
 
@@ -88,23 +102,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#eaeaea",
     padding: 5
+  },
+  link_text: {
+    color: '#2e45ec'
+  },
+  center: {
+    alignSelf: 'center',
+    marginTop: 10
   }
 });
-
-login = async () => {
-  console.log(username);
-  const { username } = this.state;
-  if (username) {
-    console.log(username);
-    await AsyncStorage.setItem("username", username);
-    goToTabs(global.icons, username);
-  }
-};
-
-goToForgotPassword = () => {
-  Navigation.push(this.props.componentId, {
-    component: {
-      name: "ForgotPasswordScreen"
-    }
-  });
-};
