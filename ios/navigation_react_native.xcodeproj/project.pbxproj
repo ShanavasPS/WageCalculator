@@ -18,6 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* navigation_react_nativeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* navigation_react_nativeTests.m */; };
 		31534E93F80AD1EEDF38A641 /* libPods-navigation_react_nativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D1BC1E7E0BF50F35CBDD2BD /* libPods-navigation_react_nativeTests.a */; };
+		8E1813E423E3601D00EB6016 /* HourList201403.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8E1813E323E3601D00EB6016 /* HourList201403.csv */; };
 		ABCF5B0FDB399569CB35F8EC /* libPods-navigation_react_native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 770F4535914B3AF8819CF001 /* libPods-navigation_react_native.a */; };
 		ECB0304054C3446D4AAC438D /* libPods-navigation_react_native-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 805D2EABF25A65E5DBC64DFB /* libPods-navigation_react_native-tvOSTests.a */; };
 /* End PBXBuildFile section */
@@ -61,6 +62,7 @@
 		79727532F7E173D6601B492C /* Pods-navigation_react_nativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_nativeTests.debug.xcconfig"; path = "Target Support Files/Pods-navigation_react_nativeTests/Pods-navigation_react_nativeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		805D2EABF25A65E5DBC64DFB /* libPods-navigation_react_native-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navigation_react_native-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C70A36600EE62683BC98DDC /* Pods-navigation_react_nativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_nativeTests.release.xcconfig"; path = "Target Support Files/Pods-navigation_react_nativeTests/Pods-navigation_react_nativeTests.release.xcconfig"; sourceTree = "<group>"; };
+		8E1813E323E3601D00EB6016 /* HourList201403.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HourList201403.csv; path = navigation_react_native/HourList201403.csv; sourceTree = "<group>"; };
 		C072E28261502ED898900019 /* libPods-navigation_react_native-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navigation_react_native-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C87282E3F812136840ECB05E /* Pods-navigation_react_native-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_native-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-navigation_react_native-tvOSTests/Pods-navigation_react_native-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		E342DD19E4A8C509EFAA89F6 /* Pods-navigation_react_native.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_native.debug.xcconfig"; path = "Target Support Files/Pods-navigation_react_native/Pods-navigation_react_native.debug.xcconfig"; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		13B07FAE1A68108700A75B9A /* navigation_react_native */ = {
 			isa = PBXGroup;
 			children = (
+				8E1813E323E3601D00EB6016 /* HourList201403.csv */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -285,15 +288,20 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = J9ZV38XDWJ;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = J9ZV38XDWJ;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = J9ZV38XDWJ;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
@@ -305,10 +313,9 @@
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "navigation_react_native" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -337,6 +344,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E1813E423E3601D00EB6016 /* HourList201403.csv in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -372,7 +380,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -632,6 +640,8 @@
 			baseConfigurationReference = 79727532F7E173D6601B492C /* Pods-navigation_react_nativeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -655,7 +665,9 @@
 			baseConfigurationReference = 8C70A36600EE62683BC98DDC /* Pods-navigation_react_nativeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				INFOPLIST_FILE = navigation_react_nativeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -677,6 +689,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				INFOPLIST_FILE = navigation_react_native/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -684,7 +697,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reactnative.csv;
 				PRODUCT_NAME = navigation_react_native;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -696,6 +709,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				INFOPLIST_FILE = navigation_react_native/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -703,7 +717,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reactnative.csv;
 				PRODUCT_NAME = navigation_react_native;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -720,6 +734,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "navigation_react_native-tvOS/Info.plist";
@@ -729,7 +744,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.navigation_react_native-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reactnative.csv-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -749,6 +764,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = J9ZV38XDWJ;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "navigation_react_native-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -757,7 +773,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.navigation_react_native-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reactnative.csv-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -823,6 +839,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -876,6 +893,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

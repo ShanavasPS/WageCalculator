@@ -12,6 +12,9 @@ import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'rea
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { goToTabs } from '../../navigation';
+import type { Person } from '../../types'
+
+var RNFS = require('react-native-fs');
 
 export default class Login extends Component {
 
@@ -46,6 +49,8 @@ export default class Login extends Component {
             </View>
 
             <Button title="Login" color="#0064e1" onPress={this.login} />
+            <Button title="Read File" color="#0064e1" onPress={this.readFile} />
+
             <TouchableOpacity onPress={this.goToForgotPassword}>
               <View style={styles.center}>
                 <Text style={styles.link_text}>Forgot Password</Text>
@@ -65,6 +70,34 @@ export default class Login extends Component {
       await AsyncStorage.setItem('username', username);
       goToTabs(global.icons, username);
     }
+  }
+
+  //
+  readFile = async () => {
+    console.log(RNFS.MainBundlePath);
+    // get a list of files and directories in the main bundle
+    RNFS.readDir(RNFS.MainBundlePath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+      .then((result) => {
+        console.log('GOT RESULT', result.length);
+      })
+      .catch((err) => {
+        console.log(err.message, err.code);
+        console.log('Failed to read directory');
+      });
+      
+      RNFS.readFile(RNFS.MainBundlePath + '/HourList201403.csv', 'utf8')
+      .then((contents) => {
+        // log the file contents
+        // console.log(contents);
+        var myArray = contents.split('/n');
+        console.log(myArray)
+        var array = myArray.map
+      })
+      .catch((err) => {
+        console.log(err.message, err.code);
+        console.log('Failed to read file');
+      });
+
   }
 
   goToForgotPassword = () => {
