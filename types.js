@@ -13,3 +13,13 @@ export type Person = {
   start: string,
   end: string,
 }
+
+export type PersonWithWorkTime = {
+  name: string,
+  id: string,
+  date: string,
+  start: string,
+  end: string,
+  hour: int,
+  minute:int,
+}
