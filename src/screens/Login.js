@@ -74,14 +74,14 @@ export default class Login extends Component {
 
   //
   readFile = async () => {
-    console.log(RNFS.MainBundlePath);
+    // console.log(RNFS.MainBundlePath);
     // get a list of files and directories in the main bundle
     RNFS.readDir(RNFS.MainBundlePath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
       .then((result) => {
-        console.log('GOT RESULT', result.length);
+        // console.log('GOT RESULT', result.length);
       })
       .catch((err) => {
-        console.log(err.message, err.code);
+        // console.log(err.message, err.code);
         console.log('Failed to read directory');
       });
       
@@ -89,9 +89,81 @@ export default class Login extends Component {
       .then((contents) => {
         // log the file contents
         // console.log(contents);
-        var myArray = contents.split('/n');
-        console.log(myArray)
-        var array = myArray.map
+        var myArray = contents.split('\n');
+        let finalArray:[Person] = myArray.map((item) => {
+            let newArray = item.split(',');
+            return Person = {
+                  name: newArray[0],
+                  id: newArray[1],
+                  date: newArray[2],
+                  start: newArray[3],
+                  end: newArray[4],
+                  }
+        })
+        
+        finalArray.splice(0, 1);
+        finalArray.splice(finalArray.length - 1, 1);
+        let index = 0;
+
+        finalArray.map((item) => {
+          console.log(item.name);
+        console.log(item.id);
+        console.log(item.date);
+        console.log(item.start);
+        console.log(item.end);
+
+        let startTime = item.start.split(':');
+        let startHour = parseInt(startTime[0]);
+        let startMin = parseInt(startTime[1]);
+
+        let endTime = item.end.split(':');
+        let endHour = parseInt(endTime[0]);
+        let endMin = parseInt(endTime[1]);
+
+        let min = 0;
+
+        if (endMin > startMin)
+        {
+          min = endMin - startMin;
+        }
+        else if(endMin == startMin)
+        {
+          min = 0
+        }
+        else
+        {
+          min = 60 - startMin + endMin;
+        }
+        
+        let hour = 0;
+        if(endHour > startHour)
+        {
+          hour = endHour - startHour 
+        }
+        else if (endHour == startHour)
+        {
+          hour = 0;
+        }
+        else
+        {
+          hour = endHour + 24 - startHour;
+        }
+
+        //Adjust hour based on min
+        if(min >= 60)
+        {
+          hour = hour + 1;
+          min = min - 60;
+        }
+
+        if(startMin > endMin)
+        {
+          hour = hour - 1;
+        }
+
+        console.log('calculated hour is ' + hour);
+        console.log('calculated min is ' + min);
+        })
       })
       .catch((err) => {
         console.log(err.message, err.code);
