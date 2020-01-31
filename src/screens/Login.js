@@ -166,7 +166,7 @@ export default class Login extends Component {
 
   calculateWageForEachPerson = (personWithTimeArray, uniquePersons) => {
     //Now separate each person from the list using their id
-    uniquePersons.map(id => {
+    let wageArray = uniquePersons.map(id => {
       let personDetails = personWithTimeArray.filter(item => item.id == id);
       console.log("personDetails count is " + personDetails.length);
 
@@ -189,7 +189,26 @@ export default class Login extends Component {
 
       console.log('total is ' + total);
 
+      var output:PersonWithWage = combinedShift.reduce(function(
+          acc,
+          item,
+        ) {
+          return item;
+        },
+        {});
+
+       return (PersonWithWage = {
+        name: output.name,
+        id: output.id,
+        wage: total
+      });
     });
+
+    console.log(wageArray.length)
+
+    wageArray.map(item => {
+        console.log(item);
+      });
   };
 
   combineMultipleShifts = personDetails => {
