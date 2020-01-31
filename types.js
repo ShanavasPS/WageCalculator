@@ -23,3 +23,14 @@ export type PersonWithWorkTime = {
   eveningHour: int,
   eveningMinute:int,
 }
+
+export type PersonWithWage= {
+  name: string,
+  id: string,
+  wage: float,
+}
+
+export type PersonID= {
+  name: string,
+  id: string,
+}

@@ -19,7 +19,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { goToTabs } from "../../navigation";
-import type { Person, PersonWithWorkTime } from "../../types";
+import type { Person, PersonWithWorkTime, PersonWithWage } from "../../types";
 
 var RNFS = require("react-native-fs");
 
@@ -146,9 +146,9 @@ export default class Login extends Component {
 
     //Calculated total hours and evening hours
     console.log("personWithTimeArray is " + personWithTimeArray.length);
-    personWithTimeArray.map(item => {
-      console.log(item);
-    });
+    // personWithTimeArray.map(item => {
+    //   console.log(item);
+    // });
 
     //Now find the number of unique persons in the shift
     const uniquePersons = [];
@@ -160,28 +160,50 @@ export default class Login extends Component {
 
     console.log("Number of distinct persons is " + uniquePersons.length);
 
+    //Calculate wage for each distinct person
+    this.calculateWageForEachPerson(personWithTimeArray, uniquePersons);
+  }
+
+  calculateWageForEachPerson = (personWithTimeArray, uniquePersons) => {
     //Now separate each person from the list using their id
-    let firstPersonDetails = personWithTimeArray.filter(
-      item => item.id == uniquePersons[0]
-    );
+    uniquePersons.map(id => {
+      let personDetails = personWithTimeArray.filter(item => item.id == id);
+      console.log("personDetails count is " + personDetails.length);
 
-    console.log("firstPersonDetails count is " + firstPersonDetails.length);
+      // personDetails.map(item => {
+      //   console.log(item);
+      // });
+      let combinedShift: [PersonWithWage] = this.combineMultipleShifts(
+        personDetails
+      );
+      console.log(combinedShift.length);
+      
+      combinedShift.map(item => {
+        console.log(item);
+      });
 
-    firstPersonDetails.map(item => {
-      console.log(item);
+      const total = combinedShift.reduce(
+        (prevValue, currentValue) => prevValue + currentValue.wage,
+        0
+      );
+
+      console.log('total is ' + total);
+
     });
+  };
 
+  combineMultipleShifts = personDetails => {
     //Combine mutliple shifts into one.
     const uniqueEntry = [];
-    firstPersonDetails.map(item => {
+    personDetails.map(item => {
       let el = uniqueEntry.filter(e => e.date === item.date);
       if (el.length > 0) {
         let index = uniqueEntry.indexOf(el[0]);
         if (index != -1) {
-          uniqueEntry[index].workingHour += item.workingHour
-          uniqueEntry[index].workingMinute += item.workingMinute
-          uniqueEntry[index].eveningHour += item.eveningHour
-          uniqueEntry[index].eveningMinute += item.eveningMinute
+          uniqueEntry[index].workingHour += item.workingHour;
+          uniqueEntry[index].workingMinute += item.workingMinute;
+          uniqueEntry[index].eveningHour += item.eveningHour;
+          uniqueEntry[index].eveningMinute += item.eveningMinute;
         }
       } else {
         uniqueEntry.push(item);
@@ -190,27 +212,27 @@ export default class Login extends Component {
 
     console.log("uniqueEntry count is " + uniqueEntry.length);
 
-    uniqueEntry.map(item => {
-      console.log(item);
-    });
+    // uniqueEntry.map(item => {
+    //   console.log(item);
+    // });
 
-    this.calculateWages(uniqueEntry);
-  }
+    return this.calculateWages(uniqueEntry);
+  };
 
   //Calculate wage for every day
-  calculateWages = (uniqueEntry) => {
-    uniqueEntry.map(item => {
+  calculateWages = uniqueEntry => {
+    return uniqueEntry.map(item => {
       var totalHours = item.workingHour;
       var totalMinutes = item.workingMinute;
       var eveningHours = item.eveningHour;
       var eveningMinutes = item.eveningMinute;
 
-      console.log('name ' + item.name)
-      console.log('date ' + item.date)
-      console.log('totalHours ' + item.workingHour)
-      console.log('totalMinutes ' + item.workingMinute)
-      console.log('eveningHours ' + item.eveningHour)
-      console.log('eveningMinutes ' + item.eveningMinute)
+      // console.log("name " + item.name);
+      // console.log("date " + item.date);
+      // console.log("totalHours " + item.workingHour);
+      // console.log("totalMinutes " + item.workingMinute);
+      // console.log("eveningHours " + item.eveningHour);
+      // console.log("eveningMinutes " + item.eveningMinute);
       //Total daily pay = Regular daily wage + Evening work compensation
       // + Overtime compensation
       //Regular daily wage = Regular working hours * Hourly wage
@@ -221,7 +243,7 @@ export default class Login extends Component {
       // If calculating overtime, evening hours are not considered.
       // First 3 to 8 = $4.25 + 25%
       // Next 1 hour = $4.25 + 50%
-      // After that = $4.25 + 100% 
+      // After that = $4.25 + 100%
 
       //First check for overtime hours
       if (totalMinutes >= 60) {
@@ -234,15 +256,14 @@ export default class Login extends Component {
       }
 
       let overtimeHours = 0;
-      let overtimeMinutes = 0;  
+      let overtimeMinutes = 0;
 
       var didWorkOvertime = false;
-      if(totalHours > 8) {
+      if (totalHours > 8) {
         didWorkOvertime = true;
         overtimeHours = totalHours - 8;
         overtimeMinutes = totalMinutes;
-      }
-      else if(totalHours == 8) {
+      } else if (totalHours == 8) {
         if (totalMinutes > 0) {
           didWorkOvertime = true;
           overtimeMinutes = totalMinutes;
@@ -250,7 +271,7 @@ export default class Login extends Component {
       }
 
       var didWorkEvening = false;
-      if(eveningHours > 0 || eveningMinutes > 0) {
+      if (eveningHours > 0 || eveningMinutes > 0) {
         didWorkEvening = true;
       }
 
@@ -259,23 +280,24 @@ export default class Login extends Component {
 
       let hourlyRate = 4.25;
       let eveningRate = hourlyRate + 1.25;
-      let quarterOverTimeRate = hourlyRate * 1.25
-      let halfOverTimeRate = hourlyRate * 1.5
-      let doubleOverTimeRate = hourlyRate * 2
+      let quarterOverTimeRate = hourlyRate * 1.25;
+      let halfOverTimeRate = hourlyRate * 1.5;
+      let doubleOverTimeRate = hourlyRate * 2;
 
       let normalWork = 0;
       let overtimeWage = 0;
       let eveningWage = 0;
       let wage = 0;
 
-      if(didWorkOvertime) { //Calculate overtime wage
+      if (didWorkOvertime) {
+        //Calculate overtime wage
         let overTimeRate = 0;
         normalMinutes = 0;
         normalHours = 8;
 
         let quarterOvertimeHours = Math.min(3, overtimeHours);
         let quarterOvertimeMinutes = 0;
-        if(quarterOvertimeHours < 3) {
+        if (quarterOvertimeHours < 3) {
           quarterOvertimeMinutes = overtimeMinutes;
         }
 
@@ -291,42 +313,50 @@ export default class Login extends Component {
           doubleOvertimeMinutes = overtimeMinutes;
         }
 
-        let quarterOvertime = quarterOvertimeHours + quarterOvertimeMinutes/60;
-        let halfOvertime = halfOvertimeHours + halfOvertimeMinutes/60;
-        let doubleOvertime = doubleOvertimeHours + doubleOvertimeMinutes/60
+        let quarterOvertime =
+          quarterOvertimeHours + quarterOvertimeMinutes / 60;
+        let halfOvertime = halfOvertimeHours + halfOvertimeMinutes / 60;
+        let doubleOvertime = doubleOvertimeHours + doubleOvertimeMinutes / 60;
 
-        console.log('quarterOvertime is ' + quarterOvertime);       
-        console.log('halfOvertime is ' + halfOvertime);
-        console.log('doubleOvertime is ' + doubleOvertime);
+        // console.log("quarterOvertime is " + quarterOvertime);
+        // console.log("halfOvertime is " + halfOvertime);
+        // console.log("doubleOvertime is " + doubleOvertime);
 
-        normalWork = normalHours + normalMinutes/60;
-        console.log('normalWork is ' + normalWork)
+        normalWork = normalHours + normalMinutes / 60;
+        // console.log("normalWork is " + normalWork);
 
-        overtimeWage = quarterOvertime * quarterOverTimeRate 
-                            + halfOvertime * halfOverTimeRate
-                            + doubleOvertime * doubleOverTimeRate;
-      }
-      else if(didWorkEvening) { //Calculate evening wage
+        overtimeWage =
+          quarterOvertime * quarterOverTimeRate +
+          halfOvertime * halfOverTimeRate +
+          doubleOvertime * doubleOverTimeRate;
+      } else if (didWorkEvening) {
+        //Calculate evening wage
         normalMinutes = totalMinutes - eveningMinutes;
         normalHours = totalHours - eveningHours;
-        let eveningWork = eveningHours + eveningMinutes/60;
-        console.log('eveningWork is ' + eveningWork)
-        normalWork = normalHours + normalMinutes/60;
-        console.log('normalWork is ' + normalWork)
+        let eveningWork = eveningHours + eveningMinutes / 60;
+        // console.log("eveningWork is " + eveningWork);
+        normalWork = normalHours + normalMinutes / 60;
+        // console.log("normalWork is " + normalWork);
         eveningWage = eveningWork * eveningRate;
-      }
-      else {  //Calculate normal wage
+      } else {
+        //Calculate normal wage
         normalMinutes = totalMinutes;
         normalHours = totalHours;
-        normalWork = normalHours + normalMinutes/60;
-        console.log('normalWork is ' + normalWork)
+        normalWork = normalHours + normalMinutes / 60;
+        // console.log("normalWork is " + normalWork);
       }
       wage = normalWork * hourlyRate + overtimeWage + eveningWage;
       wage = parseFloat(wage.toFixed(2));
-      console.log('wage is ' + wage)
-      console.log(' ')
+      // console.log("wage is " + wage);
+      // console.log(" ");
+
+      return (PersonWithWage = {
+        name: item.name,
+        id: item.id,
+        wage: wage
+      });
     });
-  }
+  };
 
   getHoursAndMinutes = (item, startHour, startMin, endHour, endMin) => {
     let min = 0;
@@ -358,8 +388,8 @@ export default class Login extends Component {
       hour = hour - 1;
     }
 
-    console.log("calculated hour is " + hour);
-    console.log("calculated min is " + min);
+    // console.log("calculated hour is " + hour);
+    // console.log("calculated min is " + min);
 
     return this.getEveningHoursAndMinutes(
       item,
@@ -441,15 +471,15 @@ export default class Login extends Component {
       }
     }
 
-    console.log("final evening minutes " + eveningMinutes);
+    // console.log("final evening minutes " + eveningMinutes);
 
     //Adjust hour based on min
     if (eveningMinutes >= 60) {
       eveningMinutes = eveningMinutes - 60;
     }
 
-    console.log("evening hours is " + eveningHours);
-    console.log("evening minutes is " + eveningMinutes);
+    // console.log("evening hours is " + eveningHours);
+    // console.log("evening minutes is " + eveningMinutes);
 
     return (PersonWithWorkTime = {
       name: item.name,
