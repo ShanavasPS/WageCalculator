@@ -18,8 +18,8 @@ export type PersonWithWorkTime = {
   name: string,
   id: string,
   date: string,
-  start: string,
-  end: string,
-  hour: int,
-  minute:int,
+  workingHour: int,
+  workingMinute:int,
+  eveningHour: int,
+  eveningMinute:int,
 }
