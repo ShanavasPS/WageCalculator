@@ -15,24 +15,21 @@ var RNFS = require("react-native-fs");
 
 export default class Home extends Component {
   render() {
-    const { wageArray } = this.props;
+    const { wageArray, fileHeader } = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Hi !</Text>
         <Button onPress={this.logout} title="Logout" color="#841584" />
         <Button onPress={this.saveToFile} title="Save to file" color="#841584" />
+        <Text style={styles.text}>
+                {fileHeader}
+              </Text>
         <FlatList
           data={wageArray}
           renderItem={({ item }) =>
             <View>
               <Text style={styles.text}>
-                {item.id}
-              </Text>
-              <Text style={styles.text}>
-                {item.name}
-              </Text>
-              <Text style={styles.text}>
-                {item.wage}
+                {item.id}, {item.name}, ${item.wage}
               </Text>
             </View>}
           keyExtractor={item => item.id}
@@ -48,21 +45,9 @@ export default class Home extends Component {
   };
 
   saveToFile = () => {
-    const { wageArray } = this.props;
-
-    let individualShift = wageArray.reduce(function(acc, item) {
-      return item;
-    }, {});
-
-    let date = individualShift.date.split(".");
-    let month = date[1];
-    if (month.length < 2) {
-      month = "0" + month;
-    }
-    let year = date[2];
+    const { wageArray, fileHeader } = this.props;    
     let fileContents = [];
-    fileContents.push('Monthly Wages ' + month + "/" + year);
-
+    fileContents.push(fileHeader);
     wageArray.map(item => {
       fileContents.push(item.id + ", " + item.name + ", $" + item.wage.toString());
     });

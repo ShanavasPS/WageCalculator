@@ -141,10 +141,24 @@ export default class Login extends Component {
 
     //Calculate wage for each distinct person
     let wageArray = this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
-    wageArray.sort((a,b) => a.id - b.id);
+    
+    let fileHeader = this.getFileHeader(shiftsWithWorkHours);
 
-    goToTabs(global.icons, wageArray);
+    goToTabs(global.icons, wageArray, fileHeader);
   }
+
+  getFileHeader = shiftsWithWorkHours => {
+    let singleShift = shiftsWithWorkHours.reduce(function(acc, item) {
+      return item;
+    }, {});
+    let date = singleShift.date.split(".");
+    let month = date[1];
+    if (month.length < 2) {
+      month = "0" + month;
+    }
+    let year = date[2];
+    return 'Monthly Wages ' + month + "/" + year;
+  };
 
   findUniquePersonsInTheShifts = personsWithWorkHours => {
     let uniquePersons = [];
@@ -153,6 +167,7 @@ export default class Login extends Component {
         uniquePersons.push(item.id);
       }
     });
+    uniquePersons.sort((a,b) => a - b);
     return uniquePersons;
   };
 
