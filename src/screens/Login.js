@@ -21,6 +21,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { goToTabs } from "../../navigation";
 import type { Person, PersonWithWorkTime, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
+import FileViewer from "react-native-file-viewer";
+import DocumentPicker from "react-native-document-picker";
 
 var RNFS = require("react-native-fs");
 
@@ -69,15 +71,29 @@ export default class Login extends Component {
 
   //
   login = async () => {
-    const { username } = this.state;
-    if (username) {
-      await AsyncStorage.setItem("username", username);
-      goToTabs(global.icons, username);
+    // Pick a single file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles]
+      });
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.name,
+        res.size
+      );
+      this.readFile(res.uri);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err;
+      }
     }
   };
 
   //
-  readFile = async () => {
+  readFile = async (filePath) => {
     // console.log(RNFS.MainBundlePath);
     // get a list of files and directories in the main bundle
     RNFS.readDir(RNFS.MainBundlePath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
@@ -89,7 +105,7 @@ export default class Login extends Component {
         console.log("Failed to read directory");
       });
 
-    RNFS.readFile(RNFS.MainBundlePath + "/HourList201403.csv", "utf8")
+    RNFS.readFile(filePath, "utf8")
       .then(contents => {
         // log the file contents
         this.extractDataFromCSVFile(contents);
@@ -119,9 +135,9 @@ export default class Login extends Component {
     console.log("finalArray count is " + shifts.length);
 
     //Calculate total hours and evening hours
-    let shiftsWithWorkHours: [
-      PersonWithWorkTime
-    ] = this.calculateHourAndMinute(shifts);
+    let shiftsWithWorkHours: [PersonWithWorkTime] = this.calculateHourAndMinute(
+      shifts
+    );
     console.log("personsWithWorkHours is " + shiftsWithWorkHours.length);
     shiftsWithWorkHours.map(item => {
       console.log(item);
@@ -132,7 +148,8 @@ export default class Login extends Component {
     console.log("Number of distinct persons is " + uniquePersons.length);
 
     //Calculate wage for each distinct person
-    this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
+    let wageArray = this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
+    goToTabs(global.icons, wageArray);
   }
 
   findUniquePersonsInTheShifts = personsWithWorkHours => {
@@ -185,7 +202,7 @@ export default class Login extends Component {
 
   calculateWageForAllThePersons = (personsWithWorkHours, uniquePersons) => {
     //Now separate each person from the list using their id
-    let wageArray:[PersonWithWage] = uniquePersons.map(id => {
+    let wageArray: [PersonWithWage] = uniquePersons.map(id => {
       return this.calculateWage(personsWithWorkHours, id);
     });
 
@@ -194,48 +211,49 @@ export default class Login extends Component {
     wageArray.map(item => {
       console.log(item);
     });
+    return wageArray;
   };
 
   calculateWage = (personsWithWorkHours, id) => {
     //Extarct the shifts of the current person
     let shifts = personsWithWorkHours.filter(item => item.id == id);
-      console.log("personShifts count is " + shifts.length);
-      // personDetails.map(item => {
-      //   console.log(item);
-      // });
+    console.log("personShifts count is " + shifts.length);
+    // personDetails.map(item => {
+    //   console.log(item);
+    // });
 
-      let combinedShifts = this.combineMultipleShifts(shifts);
-      console.log('length after combining Shifts' + combinedShifts.length);
-      combinedShifts.map(item => {
-        console.log(item);
-      });
+    let combinedShifts = this.combineMultipleShifts(shifts);
+    console.log("length after combining Shifts" + combinedShifts.length);
+    combinedShifts.map(item => {
+      console.log(item);
+    });
 
-      let combinedShiftWithWages = this.calculateWageForEachShift(combinedShifts);
+    let combinedShiftWithWages = this.calculateWageForEachShift(combinedShifts);
 
-      let totalWage = this.getTheTotalWageForAllTheShifts(combinedShiftWithWages);
-      console.log("total is " + totalWage);
+    let totalWage = this.getTheTotalWageForAllTheShifts(combinedShiftWithWages);
+    console.log("total is " + totalWage);
 
-      let person = this.getPersonDetails(combinedShifts);
+    let person = this.getPersonDetails(combinedShifts);
 
-      return (PersonWithWage = {
-        name: person.name,
-        id: person.id,
-        wage: parseFloat(totalWage.toFixed(2))
-      });
-  }
+    return (PersonWithWage = {
+      name: person.name,
+      id: person.id,
+      wage: parseFloat(totalWage.toFixed(2))
+    });
+  };
 
-  getPersonDetails = (combinedShifts) => {
+  getPersonDetails = combinedShifts => {
     return combinedShifts.reduce(function(acc, item) {
-        return item;
-      }, {});
-  }
+      return item;
+    }, {});
+  };
 
-  getTheTotalWageForAllTheShifts = (combinedShifts) => {
-      return combinedShifts.reduce(
-        (prevValue, currentValue) => prevValue + currentValue.wage,
-        0
-      );
-  }
+  getTheTotalWageForAllTheShifts = combinedShifts => {
+    return combinedShifts.reduce(
+      (prevValue, currentValue) => prevValue + currentValue.wage,
+      0
+    );
+  };
 
   combineMultipleShifts = shifts => {
     //Combine mutliple shifts into one.

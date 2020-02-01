@@ -40,7 +40,7 @@ export const goToLogin = () =>
   const iconColor = "#444";
 const selectedIconColor = "#0089da";
 
-export const goToTabs = (icons, username) => {
+export const goToTabs = (icons, wageArray) => {
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -63,7 +63,7 @@ export const goToTabs = (icons, username) => {
 
               // pass the username as a navigation prop to the Home screen
               passProps: {
-                username
+                wageArray
               }
             }
           },
