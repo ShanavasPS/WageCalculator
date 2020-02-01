@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 import { goToTabs } from "../../navigation";
 import type { Person, PersonWithWorkTime, PersonWithWage } from "../../types";
+import * as Constants from "../../constants"
 
 var RNFS = require("react-native-fs");
 
@@ -200,7 +201,7 @@ export default class Login extends Component {
        return (PersonWithWage = {
         name: output.name,
         id: output.id,
-        wage: total
+        wage: parseFloat(total.toFixed(2)),
       });
     });
 
@@ -231,9 +232,9 @@ export default class Login extends Component {
 
     console.log("uniqueEntry count is " + uniqueEntry.length);
 
-    // uniqueEntry.map(item => {
-    //   console.log(item);
-    // });
+    uniqueEntry.map(item => {
+      console.log(item);
+    });
 
     return this.calculateWages(uniqueEntry);
   };
@@ -266,23 +267,23 @@ export default class Login extends Component {
 
       //First check for overtime hours
       if (totalMinutes >= 60) {
-        totalHours += 1;
-        totalMinutes -= 60;
+        totalHours += totalMinutes / 60;
+        totalMinutes = totalMinutes % 60;
       }
       if (eveningMinutes >= 60) {
-        eveningHours += 1;
-        eveningMinutes -= 60;
+        eveningHours += eveningMinutes / 60;
+        eveningMinutes = eveningMinutes % 60;
       }
 
       let overtimeHours = 0;
       let overtimeMinutes = 0;
 
       var didWorkOvertime = false;
-      if (totalHours > 8) {
+      if (totalHours > Constants.OVERTIME_THRESHOLD) {
         didWorkOvertime = true;
-        overtimeHours = totalHours - 8;
+        overtimeHours = totalHours - Constants.OVERTIME_THRESHOLD;
         overtimeMinutes = totalMinutes;
-      } else if (totalHours == 8) {
+      } else if (totalHours == Constants.OVERTIME_THRESHOLD) {
         if (totalMinutes > 0) {
           didWorkOvertime = true;
           overtimeMinutes = totalMinutes;
@@ -297,12 +298,6 @@ export default class Login extends Component {
       let normalMinutes = 0;
       let normalHours = 0;
 
-      let hourlyRate = 4.25;
-      let eveningRate = hourlyRate + 1.25;
-      let quarterOverTimeRate = hourlyRate * 1.25;
-      let halfOverTimeRate = hourlyRate * 1.5;
-      let doubleOverTimeRate = hourlyRate * 2;
-
       let normalWork = 0;
       let overtimeWage = 0;
       let eveningWage = 0;
@@ -312,23 +307,23 @@ export default class Login extends Component {
         //Calculate overtime wage
         let overTimeRate = 0;
         normalMinutes = 0;
-        normalHours = 8;
+        normalHours = Constants.OVERTIME_THRESHOLD;
 
-        let quarterOvertimeHours = Math.min(3, overtimeHours);
+        let quarterOvertimeHours = Math.min(Constants.QUARTER_OVERTIME_THRESHOLD, overtimeHours);
         let quarterOvertimeMinutes = 0;
-        if (quarterOvertimeHours < 3) {
+        if (quarterOvertimeHours < Constants.QUARTER_OVERTIME_THRESHOLD) {
           quarterOvertimeMinutes = overtimeMinutes;
         }
 
-        let halfOvertimeHours = Math.min(1, Math.max(0, overtimeHours - 3));
+        let halfOvertimeHours = Math.min(Constants.HALF_OVERTIME_THRESHOLD - Constants.QUARTER_OVERTIME_THRESHOLD, Math.max(0, overtimeHours - Constants.QUARTER_OVERTIME_THRESHOLD));
         let halfOvertimeMinutes = 0;
-        if (quarterOvertimeHours == 3 && overtimeMinutes > 0) {
+        if (quarterOvertimeHours == Constants.QUARTER_OVERTIME_THRESHOLD && overtimeMinutes > 0) {
           halfOvertimeMinutes = overtimeMinutes;
         }
 
-        let doubleOvertimeHours = Math.max(0, overtimeHours - 4);
+        let doubleOvertimeHours = Math.max(0, overtimeHours - Constants.HALF_OVERTIME_THRESHOLD);
         let doubleOvertimeMinutes = 0;
-        if (halfOvertimeHours == 1 && overtimeMinutes > 0) {
+        if (halfOvertimeHours == (Constants.HALF_OVERTIME_THRESHOLD - Constants.QUARTER_OVERTIME_THRESHOLD) && overtimeMinutes > 0) {
           doubleOvertimeMinutes = overtimeMinutes;
         }
 
@@ -345,9 +340,9 @@ export default class Login extends Component {
         // console.log("normalWork is " + normalWork);
 
         overtimeWage =
-          quarterOvertime * quarterOverTimeRate +
-          halfOvertime * halfOverTimeRate +
-          doubleOvertime * doubleOverTimeRate;
+          quarterOvertime * Constants.QUARTER_OVERTIME_RATE +
+          halfOvertime * Constants.HALF_OVERTIME_RATE +
+          doubleOvertime * Constants.FULL_OVERTIME_RATE;
       } else if (didWorkEvening) {
         //Calculate evening wage
         normalMinutes = totalMinutes - eveningMinutes;
@@ -356,7 +351,7 @@ export default class Login extends Component {
         // console.log("eveningWork is " + eveningWork);
         normalWork = normalHours + normalMinutes / 60;
         // console.log("normalWork is " + normalWork);
-        eveningWage = eveningWork * eveningRate;
+        eveningWage = eveningWork * Constants.EVENING_COMPENSATION_RATE;
       } else {
         //Calculate normal wage
         normalMinutes = totalMinutes;
@@ -364,7 +359,7 @@ export default class Login extends Component {
         normalWork = normalHours + normalMinutes / 60;
         // console.log("normalWork is " + normalWork);
       }
-      wage = normalWork * hourlyRate + overtimeWage + eveningWage;
+      wage = normalWork * Constants.HOURLY_RATE + overtimeWage + eveningWage;
       wage = parseFloat(wage.toFixed(2));
       // console.log("wage is " + wage);
       // console.log(" ");
@@ -399,8 +394,8 @@ export default class Login extends Component {
 
     //Adjust hour based on min
     if (min >= 60) {
-      hour = hour + 1;
-      min = min - 60;
+      hour += min / 60;
+      min = min % 60;
     }
 
     if (startMin > endMin) {
@@ -436,22 +431,22 @@ export default class Login extends Component {
     //Shift is on the same day
     if (endHour > startHour) {
       //Calculate Hours
-      if (startHour <= 6) {
-        eveningHours += Math.min(6, 6 - startHour);
-        if (startHour < 6) {
+      if (startHour <= Constants.EVENING_WORK_END_TIME) {
+        eveningHours += Math.min(Constants.EVENING_WORK_END_TIME, Constants.EVENING_WORK_END_TIME - startHour);
+        if (startHour < Constants.EVENING_WORK_END_TIME) {
           eveningMinutes += 60 - startMin;
         }
-      } else if (startHour >= 19) {
+      } else if (startHour >= Constants.EVENING_WORK_BEGIN_TIME) {
         eveningMinutes += 60 - startMin;
       }
       // console.log("evening minutes 1 " + eveningMinutes);
-      if (endHour <= 6) {
+      if (endHour <= Constants.EVENING_WORK_END_TIME) {
         eveningHours = Math.min(6, endHour - startHour);
-        if (endHour < 6) {
+        if (endHour < Constants.EVENING_WORK_END_TIME) {
           eveningMinutes += endMin;
         }
-      } else if (endHour >= 19) {
-        eveningHours += Math.min(hour, endHour - 19);
+      } else if (endHour >= Constants.EVENING_WORK_BEGIN_TIME) {
+        eveningHours += Math.min(hour, endHour - Constants.EVENING_WORK_BEGIN_TIME);
         eveningMinutes += endMin;
       }
       // console.log("evening minutes 2 " + eveningMinutes);
@@ -459,26 +454,26 @@ export default class Login extends Component {
     } else if (endHour < startHour) {
       //Shift is between two days
       //Calculate Hours
-      if (startHour >= 19) {
+      if (startHour >= Constants.EVENING_WORK_BEGIN_TIME) {
         eveningHours += 24 - startHour;
         eveningMinutes += 60 - startMin;
       } else {
-        eveningHours += 24 - 19;
+        eveningHours += 24 - Constants.EVENING_WORK_BEGIN_TIME;
       }
 
-      if (endHour >= 19) {
-        eveningHours += 6 + 24 - endHour;
+      if (endHour >= Constants.EVENING_WORK_BEGIN_TIME) {
+        eveningHours += Constants.EVENING_WORK_END_TIME + 24 - endHour;
         eveningMinutes += endMin;
       } else {
-        eveningHours += Math.min(6, endHour);
-        if (endHour < 6) {
+        eveningHours += Math.min(Constants.EVENING_WORK_END_TIME, endHour);
+        if (endHour < Constants.EVENING_WORK_END_TIME) {
           eveningMinutes += endMin;
         }
       }
       //Calculate Minutes
     } else {
-      if (startHour <= 6 || endHour >= 19) {
-        if (startHour != 6) {
+      if (startHour <= Constants.EVENING_WORK_END_TIME || endHour >= Constants.EVENING_WORK_BEGIN_TIME) {
+        if (startHour != Constants.EVENING_WORK_END_TIME) {
           eveningMinutes = min;
         }
       }
@@ -494,7 +489,8 @@ export default class Login extends Component {
 
     //Adjust hour based on min
     if (eveningMinutes >= 60) {
-      eveningMinutes = eveningMinutes - 60;
+      eveningHours += eveningMinutes / 60;
+      eveningMinutes = eveningMinutes % 60;
     }
 
     // console.log("evening hours is " + eveningHours);
