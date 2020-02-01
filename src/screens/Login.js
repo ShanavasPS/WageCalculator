@@ -102,23 +102,48 @@ export default class Login extends Component {
   };
 
   extractDataFromCSVFile(contents) {
-    var splitDetails = contents.split("\n");
-    console.log("splitDetails count is " + splitDetails.length);
+    var splitShifts = contents.split("\n");
+    console.log("splitShifts count is " + splitShifts.length);
 
-    let persons: [Person] = splitDetails.map(item => {
-      let newPerson = item.split(",");
+    let shifts: [Person] = splitShifts.map(item => {
+      let shift = item.split(",");
       return (Person = {
-        name: newPerson[0],
-        id: newPerson[1],
-        date: newPerson[2],
-        start: newPerson[3],
-        end: newPerson[4]
+        name: shift[0],
+        id: shift[1],
+        date: shift[2],
+        start: shift[3],
+        end: shift[4]
       });
     });
 
-    console.log("finalArray count is " + persons.length);
-    this.calculateHourAndMinute(persons);
+    console.log("finalArray count is " + shifts.length);
+
+    //Calculate total hours and evening hours
+    let shiftsWithWorkHours: [
+      PersonWithWorkTime
+    ] = this.calculateHourAndMinute(shifts);
+    console.log("personsWithWorkHours is " + shiftsWithWorkHours.length);
+    shiftsWithWorkHours.map(item => {
+      console.log(item);
+    });
+
+    //Now find the number of unique persons in the shift
+    let uniquePersons = this.findUniquePersonsInTheShifts(shiftsWithWorkHours);
+    console.log("Number of distinct persons is " + uniquePersons.length);
+
+    //Calculate wage for each distinct person
+    this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
   }
+
+  findUniquePersonsInTheShifts = personsWithWorkHours => {
+    let uniquePersons = [];
+    personsWithWorkHours.map(item => {
+      if (uniquePersons.indexOf(item.id) === -1) {
+        uniquePersons.push(item.id);
+      }
+    });
+    return uniquePersons;
+  };
 
   calculateHourAndMinute(persons: [Person]) {
     //Remove the header from the CSV file format
@@ -128,7 +153,7 @@ export default class Login extends Component {
 
     console.log("Persons count is is " + persons.length);
 
-    let personWithTimeArray: [PersonWithWorkTime] = persons.map(item => {
+    return persons.map(item => {
       let startTime = item.start.split(":");
       let startHour = parseInt(startTime[0]);
       let startMin = parseInt(startTime[1]);
@@ -146,63 +171,22 @@ export default class Login extends Component {
       console.log("startHour " + startHour);
       console.log("endHour " + endHour);
 
-      return this.getWorkHoursAndEveningHours(item, startHour, endHour);
+      let result = this.getWorkHoursAndEveningHours(item, startHour, endHour);
+
+      return (PersonWithWorkTime = {
+        name: item.name,
+        id: item.id,
+        date: item.date,
+        workingHour: result.workingHour,
+        eveningHour: result.eveningHour
+      });
     });
-
-    //Calculated total hours and evening hours
-    console.log("personWithTimeArray is " + personWithTimeArray.length);
-    personWithTimeArray.map(item => {
-      console.log(item);
-    });
-
-    //Now find the number of unique persons in the shift
-    const uniquePersons = [];
-    personWithTimeArray.map(item => {
-      if (uniquePersons.indexOf(item.id) === -1) {
-        uniquePersons.push(item.id);
-      }
-    });
-
-    console.log("Number of distinct persons is " + uniquePersons.length);
-
-    //Calculate wage for each distinct person
-    this.calculateWageForEachPerson(personWithTimeArray, uniquePersons);
   }
 
-  calculateWageForEachPerson = (personWithTimeArray, uniquePersons) => {
+  calculateWageForAllThePersons = (personsWithWorkHours, uniquePersons) => {
     //Now separate each person from the list using their id
-    let wageArray = uniquePersons.map(id => {
-      let personDetails = personWithTimeArray.filter(item => item.id == id);
-      console.log("personDetails count is " + personDetails.length);
-
-      // personDetails.map(item => {
-      //   console.log(item);
-      // });
-      let combinedShift: [PersonWithWage] = this.combineMultipleShifts(
-        personDetails
-      );
-      console.log(combinedShift.length);
-
-      combinedShift.map(item => {
-        console.log(item);
-      });
-
-      const total = combinedShift.reduce(
-        (prevValue, currentValue) => prevValue + currentValue.wage,
-        0
-      );
-
-      console.log("total is " + total);
-
-      var output: PersonWithWage = combinedShift.reduce(function(acc, item) {
-        return item;
-      }, {});
-
-      return (PersonWithWage = {
-        name: output.name,
-        id: output.id,
-        wage: parseFloat(total.toFixed(2))
-      });
+    let wageArray:[PersonWithWage] = uniquePersons.map(id => {
+      return this.calculateWage(personsWithWorkHours, id);
     });
 
     console.log(wageArray.length);
@@ -212,17 +196,57 @@ export default class Login extends Component {
     });
   };
 
-  combineMultipleShifts = personDetails => {
+  calculateWage = (personsWithWorkHours, id) => {
+    //Extarct the shifts of the current person
+    let shifts = personsWithWorkHours.filter(item => item.id == id);
+      console.log("personShifts count is " + shifts.length);
+      // personDetails.map(item => {
+      //   console.log(item);
+      // });
+
+      let combinedShifts = this.combineMultipleShifts(shifts);
+      console.log('length after combining Shifts' + combinedShifts.length);
+      combinedShifts.map(item => {
+        console.log(item);
+      });
+
+      let combinedShiftWithWages = this.calculateWageForEachShift(combinedShifts);
+
+      let totalWage = this.getTheTotalWageForAllTheShifts(combinedShiftWithWages);
+      console.log("total is " + totalWage);
+
+      let person = this.getPersonDetails(combinedShifts);
+
+      return (PersonWithWage = {
+        name: person.name,
+        id: person.id,
+        wage: parseFloat(totalWage.toFixed(2))
+      });
+  }
+
+  getPersonDetails = (combinedShifts) => {
+    return combinedShifts.reduce(function(acc, item) {
+        return item;
+      }, {});
+  }
+
+  getTheTotalWageForAllTheShifts = (combinedShifts) => {
+      return combinedShifts.reduce(
+        (prevValue, currentValue) => prevValue + currentValue.wage,
+        0
+      );
+  }
+
+  combineMultipleShifts = shifts => {
     //Combine mutliple shifts into one.
     const uniqueEntry = [];
-    personDetails.map(item => {
+    shifts.map(item => {
       let el = uniqueEntry.filter(e => e.date === item.date);
       if (el.length > 0) {
         let index = uniqueEntry.indexOf(el[0]);
         if (index != -1) {
           uniqueEntry[index].workingHour += item.workingHour;
           uniqueEntry[index].eveningHour += item.eveningHour;
-          uniqueEntry[index].eveningMinute += item.eveningMinute;
         }
       } else {
         uniqueEntry.push(item);
@@ -230,19 +254,21 @@ export default class Login extends Component {
     });
 
     console.log("uniqueEntry count is " + uniqueEntry.length);
-
-    uniqueEntry.map(item => {
-      console.log(item);
-    });
-
-    return this.calculateWages(uniqueEntry);
+    return uniqueEntry;
   };
 
   //Calculate wage for every day
-  calculateWages = uniqueEntry => {
+  calculateWageForEachShift = uniqueEntry => {
     return uniqueEntry.map(item => {
       var totalHours = item.workingHour;
       var eveningHours = item.eveningHour;
+
+      let overtimeHours = 0;
+      let normalHours = 0;
+
+      let overtimeWage = 0;
+      let eveningWage = 0;
+      let wage = 0;
 
       // console.log("name " + item.name);
       // console.log("date " + item.date);
@@ -260,56 +286,12 @@ export default class Login extends Component {
       // Next 1 hour = $4.25 + 50%
       // After that = $4.25 + 100%
 
-      let overtimeHours = 0;
-
-      var didWorkOvertime = false;
       if (totalHours >= Constants.OVERTIME_THRESHOLD) {
-        didWorkOvertime = true;
-      }
-
-      var didWorkEvening = false;
-      if (eveningHours > 0) {
-        didWorkEvening = true;
-      }
-
-      let normalHours = 0;
-
-      let overtimeWage = 0;
-      let eveningWage = 0;
-      let wage = 0;
-
-      if (didWorkOvertime) {
         //Calculate overtime wage
         normalHours = Constants.OVERTIME_THRESHOLD;
         overtimeHours = totalHours - normalHours;
-
-        //Find the overtime hours eligible for additional quarter hourly rate
-        let quarterOvertimeHours = Math.min(
-          Constants.QUARTER_OVERTIME_THRESHOLD,
-          overtimeHours
-        );
-
-        let halfOvertimeHours = Math.min(
-          Constants.HALF_OVERTIME_THRESHOLD -
-            Constants.QUARTER_OVERTIME_THRESHOLD,
-          Math.max(0, overtimeHours - Constants.QUARTER_OVERTIME_THRESHOLD)
-        );
-
-        let fullOvertimeHours = Math.max(
-          0,
-          overtimeHours - Constants.HALF_OVERTIME_THRESHOLD
-        );
-
-        // console.log("quarterOvertime is " + quarterOvertimeHours);
-        // console.log("halfOvertime is " + halfOvertimeHours);
-        // console.log("fullOvertimeHours is " + fullOvertimeHours);
-        // console.log("normalHours is " + normalHours);
-
-        overtimeWage =
-          quarterOvertimeHours * Constants.QUARTER_OVERTIME_RATE +
-          halfOvertimeHours * Constants.HALF_OVERTIME_RATE +
-          fullOvertimeHours * Constants.FULL_OVERTIME_RATE;
-      } else if (didWorkEvening) {
+        overtimeWage = this.getOvertimeWage(overtimeHours);
+      } else if (eveningHours > 0) {
         //Calculate evening wage
         normalHours = totalHours - eveningHours;
         // console.log("normalHours is " + normalHours);
@@ -332,25 +314,58 @@ export default class Login extends Component {
     });
   };
 
+  getOvertimeWage = overtimeHours => {
+    let overtimeWage = 0;
+
+    //Find the overtime hours eligible for additional quarter hourly rate
+    let quarterOvertimeHours = Math.min(
+      Constants.QUARTER_OVERTIME_THRESHOLD,
+      overtimeHours
+    );
+
+    let halfOvertimeHours = Math.min(
+      Constants.HALF_OVERTIME_THRESHOLD - Constants.QUARTER_OVERTIME_THRESHOLD,
+      Math.max(0, overtimeHours - Constants.QUARTER_OVERTIME_THRESHOLD)
+    );
+
+    let fullOvertimeHours = Math.max(
+      0,
+      overtimeHours - Constants.HALF_OVERTIME_THRESHOLD
+    );
+
+    // console.log("quarterOvertime is " + quarterOvertimeHours);
+    // console.log("halfOvertime is " + halfOvertimeHours);
+    // console.log("fullOvertimeHours is " + fullOvertimeHours);
+    // console.log("normalHours is " + normalHours);
+
+    overtimeWage =
+      quarterOvertimeHours * Constants.QUARTER_OVERTIME_RATE +
+      halfOvertimeHours * Constants.HALF_OVERTIME_RATE +
+      fullOvertimeHours * Constants.FULL_OVERTIME_RATE;
+    return overtimeWage;
+  };
+
   getWorkHoursAndEveningHours = (item, startHour, endHour) => {
     let workHours = 0;
 
     workHours = Math.abs(endHour - startHour);
 
-    console.log("workHours " + workHours);
-    console.log(" ");
+    // console.log("workHours " + workHours);
+    // console.log(" ");
     // console.log("calculated hour is " + hour);
     // console.log("calculated min is " + min);
 
-    let eveningHours = this.getEveningHours(item, startHour, endHour, workHours);
-    
-    return (PersonWithWorkTime = {
-      name: item.name,
-      id: item.id,
-      date: item.date,
+    let eveningHours = this.getEveningHours(
+      item,
+      startHour,
+      endHour,
+      workHours
+    );
+
+    return {
       workingHour: workHours,
       eveningHour: eveningHours
-    });
+    };
   };
 
   getEveningHours = (item, startHour, endHour, workHours) => {
