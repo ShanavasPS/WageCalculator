@@ -23,8 +23,9 @@ export type PersonWithWorkTime = {
 }
 
 export type PersonWithWage= {
-  name: string,
   id: string,
+  name: string,
+  date: string,
   wage: float,
 }
 

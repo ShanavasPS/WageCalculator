@@ -47,22 +47,10 @@ export default class Login extends Component {
       <View style={styles.wrapper}>
         <View style={styles.container}>
           <View style={styles.main}>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Enter your username</Text>
-              <TextInput
-                onChangeText={username => this.setState({ username })}
-                style={styles.textInput}
-              />
-            </View>
 
-            <Button title="Login" color="#0064e1" onPress={this.login} />
-            <Button title="Read File" color="#0064e1" onPress={this.readFile} />
 
-            <TouchableOpacity onPress={this.goToForgotPassword}>
-              <View style={styles.center}>
-                <Text style={styles.link_text}>Forgot Password</Text>
-              </View>
-            </TouchableOpacity>
+            <Button title="Open CSV File" color="#0064e1" onPress={this.openCSVFile} />
+
           </View>
         </View>
       </View>
@@ -70,7 +58,7 @@ export default class Login extends Component {
   }
 
   //
-  login = async () => {
+  openCSVFile = async () => {
     // Pick a single file
     try {
       const res = await DocumentPicker.pick({
@@ -82,6 +70,9 @@ export default class Login extends Component {
         res.name,
         res.size
       );
+
+      // console.path('directory path is ' + RNFS.DocumentDirectoryPath);
+
       this.readFile(res.uri);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -94,7 +85,8 @@ export default class Login extends Component {
 
   //
   readFile = async (filePath) => {
-    // console.log(RNFS.MainBundlePath);
+    // console.log('directory path is ' + RNFS.DocumentDirectoryPath);
+
     // get a list of files and directories in the main bundle
     RNFS.readDir(RNFS.MainBundlePath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
       .then(result => {
@@ -149,6 +141,8 @@ export default class Login extends Component {
 
     //Calculate wage for each distinct person
     let wageArray = this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
+    wageArray.sort((a,b) => a.id - b.id);
+
     goToTabs(global.icons, wageArray);
   }
 
@@ -236,8 +230,9 @@ export default class Login extends Component {
     let person = this.getPersonDetails(combinedShifts);
 
     return (PersonWithWage = {
-      name: person.name,
       id: person.id,
+      name: person.name,
+      date: person.date,
       wage: parseFloat(totalWage.toFixed(2))
     });
   };
@@ -257,7 +252,7 @@ export default class Login extends Component {
 
   combineMultipleShifts = shifts => {
     //Combine mutliple shifts into one.
-    const uniqueEntry = [];
+    let uniqueEntry = [];
     shifts.map(item => {
       let el = uniqueEntry.filter(e => e.date === item.date);
       if (el.length > 0) {
@@ -325,9 +320,10 @@ export default class Login extends Component {
       // console.log(" ");
 
       return (PersonWithWage = {
-        name: item.name,
         id: item.id,
-        wage: wage
+        name: item.name,
+        date: item.date,
+        wage: wage,
       });
     });
   };

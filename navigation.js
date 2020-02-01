@@ -63,7 +63,7 @@ export const goToTabs = (icons, wageArray) => {
 
               // pass the username as a navigation prop to the Home screen
               passProps: {
-                wageArray
+                wageArray,
               }
             }
           },
