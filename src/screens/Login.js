@@ -43,10 +43,11 @@ export default class Login extends Component {
       <View style={styles.wrapper}>
         <View style={styles.container}>
           <View style={styles.main}>
-
-
-            <Button title="Open CSV File" color="#0064e1" onPress={this.openCSVFile} />
-
+            <Button
+              title="Open CSV File"
+              color="#0064e1"
+              onPress={this.openCSVFile}
+            />
           </View>
         </View>
       </View>
@@ -80,7 +81,7 @@ export default class Login extends Component {
   };
 
   //
-  readFile = async (filePath) => {
+  readFile = async filePath => {
     // console.log('directory path is ' + RNFS.DocumentDirectoryPath);
 
     // get a list of files and directories in the main bundle
@@ -96,16 +97,37 @@ export default class Login extends Component {
     RNFS.readFile(filePath, "utf8")
       .then(contents => {
         // log the file contents
-        this.extractDataFromCSVFile(contents);
-        // this.getEveningHoursAndMinutes(19, 15, 22, 30, 3, 15);
+        let shifts = this.extractShiftsFromCSVFile(contents);
+
+        //Calculate total hours and evening hours
+        let shiftsWithWorkHours = this.calculateTotalAndEveningHours(shifts);
+        console.log("personsWithWorkHours is " + shiftsWithWorkHours.length);
+        shiftsWithWorkHours.map(item => {
+          console.log(item);
+        });
+
+        //Now find the number of unique persons in the shift
+        let uniquePersons = this.findUniquePersonsInTheShifts(
+          shiftsWithWorkHours
+        );
+        console.log("Number of distinct persons is " + uniquePersons.length);
+
+        //Calculate wage for each distinct person
+        let wageArray = this.calculateWageForAllThePersons(
+          shiftsWithWorkHours,
+          uniquePersons
+        );
+
+        let fileHeader = this.getFileHeader(shiftsWithWorkHours);
+
+        goToHome(wageArray, fileHeader);
       })
       .catch(err => {
         console.log(err.message, err.code);
-        console.log("Failed to read file");
       });
   };
 
-  extractDataFromCSVFile(contents) {
+  extractShiftsFromCSVFile(contents) {
     var splitShifts = contents.split("\n");
     console.log("splitShifts count is " + splitShifts.length);
 
@@ -121,53 +143,10 @@ export default class Login extends Component {
     });
 
     console.log("finalArray count is " + shifts.length);
-
-    //Calculate total hours and evening hours
-    let shiftsWithWorkHours: [PersonWithWorkTime] = this.calculateHourAndMinute(
-      shifts
-    );
-    console.log("personsWithWorkHours is " + shiftsWithWorkHours.length);
-    shiftsWithWorkHours.map(item => {
-      console.log(item);
-    });
-
-    //Now find the number of unique persons in the shift
-    let uniquePersons = this.findUniquePersonsInTheShifts(shiftsWithWorkHours);
-    console.log("Number of distinct persons is " + uniquePersons.length);
-
-    //Calculate wage for each distinct person
-    let wageArray = this.calculateWageForAllThePersons(shiftsWithWorkHours, uniquePersons);
-    
-    let fileHeader = this.getFileHeader(shiftsWithWorkHours);
-
-    goToHome(wageArray, fileHeader);
+    return shifts;
   }
 
-  getFileHeader = shiftsWithWorkHours => {
-    let singleShift = shiftsWithWorkHours.reduce(function(acc, item) {
-      return item;
-    }, {});
-    let date = singleShift.date.split(".");
-    let month = date[1];
-    if (month.length < 2) {
-      month = "0" + month;
-    }
-    let year = date[2];
-    return 'Monthly Wages ' + month + "/" + year;
-  };
-
-  findUniquePersonsInTheShifts = personsWithWorkHours => {
-    let uniquePersons = [];
-    personsWithWorkHours.map(item => {
-      if (uniquePersons.indexOf(item.id) === -1) {
-        uniquePersons.push(item.id);
-      }
-    });
-    uniquePersons.sort((a,b) => a - b);
-    return uniquePersons;
-  };
-
-  calculateHourAndMinute(persons: [Person]) {
+  calculateTotalAndEveningHours(persons: [Person]) {
     //Remove the header from the CSV file format
     persons.splice(0, 1);
     //Remove the laste blank entry
@@ -204,6 +183,28 @@ export default class Login extends Component {
       });
     });
   }
+
+  findUniquePersonsInTheShifts = personsWithWorkHours => {
+    let uniquePersons = [];
+    personsWithWorkHours.map(item => {
+      if (uniquePersons.indexOf(item.id) === -1) {
+        uniquePersons.push(item.id);
+      }
+    });
+    uniquePersons.sort((a, b) => a - b);
+    return uniquePersons;
+  };
+
+  getFileHeader = shiftsWithWorkHours => {
+    let singleShift = this.getPersonDetails(shiftsWithWorkHours);
+    let date = singleShift.date.split(".");
+    let month = date[1];
+    if (month.length < 2) {
+      month = "0" + month;
+    }
+    let year = date[2];
+    return "Monthly Wages " + month + "/" + year;
+  };
 
   calculateWageForAllThePersons = (personsWithWorkHours, uniquePersons) => {
     //Now separate each person from the list using their id
@@ -334,7 +335,7 @@ export default class Login extends Component {
         id: item.id,
         name: item.name,
         date: item.date,
-        wage: wage,
+        wage: wage
       });
     });
   };
@@ -398,7 +399,7 @@ export default class Login extends Component {
     //Shift is on the same day
     if (endHour > startHour) {
       //Calculate evening hours for the shifts on the same day
-      eveningHours = this.calculateEveningHoursSameDayShifts(
+      eveningHours = this.calculateEveningHoursForSameDayShifts(
         startHour,
         endHour
       );
@@ -414,7 +415,7 @@ export default class Login extends Component {
     return eveningHours;
   };
 
-  calculateEveningHoursSameDayShifts = (startHour, endHour) => {
+  calculateEveningHoursForSameDayShifts = (startHour, endHour) => {
     let eveningHours = 0;
     //Add the early morning hours
     if (startHour < Constants.EVENING_WORK_END_TIME) {
