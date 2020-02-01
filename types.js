@@ -19,9 +19,7 @@ export type PersonWithWorkTime = {
   id: string,
   date: string,
   workingHour: int,
-  workingMinute:int,
   eveningHour: int,
-  eveningMinute:int,
 }
 
 export type PersonWithWage= {
