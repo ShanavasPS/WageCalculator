@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-import { goToTabs } from "../../navigation";
+import { goToHome } from "../../navigation";
 import type { Person, PersonWithWorkTime, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
 import FileViewer from "react-native-file-viewer";
@@ -37,10 +37,6 @@ export default class Login extends Component {
       }
     };
   }
-
-  state = {
-    username: ""
-  };
 
   render() {
     return (
@@ -144,7 +140,7 @@ export default class Login extends Component {
     
     let fileHeader = this.getFileHeader(shiftsWithWorkHours);
 
-    goToTabs(global.icons, wageArray, fileHeader);
+    goToHome(wageArray, fileHeader);
   }
 
   getFileHeader = shiftsWithWorkHours => {
@@ -211,16 +207,16 @@ export default class Login extends Component {
 
   calculateWageForAllThePersons = (personsWithWorkHours, uniquePersons) => {
     //Now separate each person from the list using their id
-    let wageArray: [PersonWithWage] = uniquePersons.map(id => {
+    let wages: [PersonWithWage] = uniquePersons.map(id => {
       return this.calculateWage(personsWithWorkHours, id);
     });
 
-    console.log(wageArray.length);
+    console.log(wages.length);
 
-    wageArray.map(item => {
+    wages.map(item => {
       console.log(item);
     });
-    return wageArray;
+    return wages;
   };
 
   calculateWage = (personsWithWorkHours, id) => {
@@ -465,14 +461,6 @@ export default class Login extends Component {
       eveningHours += endHour - Constants.EVENING_WORK_BEGIN_TIME;
     }
     return eveningHours;
-  };
-
-  goToForgotPassword = () => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: "ForgotPasswordScreen"
-      }
-    });
   };
 }
 //

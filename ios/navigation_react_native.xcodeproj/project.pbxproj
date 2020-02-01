@@ -18,7 +18,6 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* navigation_react_nativeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* navigation_react_nativeTests.m */; };
 		31534E93F80AD1EEDF38A641 /* libPods-navigation_react_nativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D1BC1E7E0BF50F35CBDD2BD /* libPods-navigation_react_nativeTests.a */; };
-		8E1813E423E3601D00EB6016 /* HourList201403.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8E1813E323E3601D00EB6016 /* HourList201403.csv */; };
 		ABCF5B0FDB399569CB35F8EC /* libPods-navigation_react_native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 770F4535914B3AF8819CF001 /* libPods-navigation_react_native.a */; };
 		ECB0304054C3446D4AAC438D /* libPods-navigation_react_native-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 805D2EABF25A65E5DBC64DFB /* libPods-navigation_react_native-tvOSTests.a */; };
 /* End PBXBuildFile section */
@@ -62,7 +61,6 @@
 		79727532F7E173D6601B492C /* Pods-navigation_react_nativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_nativeTests.debug.xcconfig"; path = "Target Support Files/Pods-navigation_react_nativeTests/Pods-navigation_react_nativeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		805D2EABF25A65E5DBC64DFB /* libPods-navigation_react_native-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navigation_react_native-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C70A36600EE62683BC98DDC /* Pods-navigation_react_nativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_nativeTests.release.xcconfig"; path = "Target Support Files/Pods-navigation_react_nativeTests/Pods-navigation_react_nativeTests.release.xcconfig"; sourceTree = "<group>"; };
-		8E1813E323E3601D00EB6016 /* HourList201403.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HourList201403.csv; path = navigation_react_native/HourList201403.csv; sourceTree = "<group>"; };
 		C072E28261502ED898900019 /* libPods-navigation_react_native-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navigation_react_native-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C87282E3F812136840ECB05E /* Pods-navigation_react_native-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_native-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-navigation_react_native-tvOSTests/Pods-navigation_react_native-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		E342DD19E4A8C509EFAA89F6 /* Pods-navigation_react_native.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navigation_react_native.debug.xcconfig"; path = "Target Support Files/Pods-navigation_react_native/Pods-navigation_react_native.debug.xcconfig"; sourceTree = "<group>"; };
@@ -127,7 +125,6 @@
 		13B07FAE1A68108700A75B9A /* navigation_react_native */ = {
 			isa = PBXGroup;
 			children = (
-				8E1813E323E3601D00EB6016 /* HourList201403.csv */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -232,7 +229,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				8734CE2A5CA1D6821E2C5D92 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -344,7 +340,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E1813E423E3601D00EB6016 /* HourList201403.csv in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -460,54 +455,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8734CE2A5CA1D6821E2C5D92 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-navigation_react_native/Pods-navigation_react_native-resources.sh",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-navigation_react_native/Pods-navigation_react_native-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E8F95002E3D991211F46A80E /* [CP] Check Pods Manifest.lock */ = {

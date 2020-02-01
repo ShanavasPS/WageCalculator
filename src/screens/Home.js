@@ -7,7 +7,6 @@
  */
 import React, { Component } from "react";
 import { FlatList, View, Text, Button, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { goToLogin } from "../../navigation";
@@ -18,9 +17,6 @@ export default class Home extends Component {
     const { wageArray, fileHeader } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Hi !</Text>
-        <Button onPress={this.logout} title="Logout" color="#841584" />
-        <Button onPress={this.saveToFile} title="Save to file" color="#841584" />
         <Text style={styles.text}>
                 {fileHeader}
               </Text>
@@ -34,13 +30,14 @@ export default class Home extends Component {
             </View>}
           keyExtractor={item => item.id}
         />
+        <Button onPress={this.saveToFile} title="Save date to a file" color="#841584" />
+        <Button onPress={this.upload} title="Upload new file" color="#841584" />
       </View>
     );
   }
   //
 
-  logout = async () => {
-    await AsyncStorage.removeItem("username");
+  upload = async () => {
     goToLogin();
   };
 
