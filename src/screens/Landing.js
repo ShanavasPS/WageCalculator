@@ -50,9 +50,15 @@ export default class Landing extends Component {
         <View style={styles.container}>
           <View style={styles.main}>
             <Button
-              title="Open CSV File"
+              title="Upload CSV File"
               buttonStyle={{ width: "100%" }}
               onPress={this.openCSVFile}
+              type="outline"
+            />
+            <Button
+              title="Load test CSV File"
+              buttonStyle={{ width: "100%" }}
+              onPress={this.loadTestFile}
               type="outline"
             />
           </View>
@@ -76,6 +82,13 @@ export default class Landing extends Component {
         throw err;
       }
     }
+  };
+
+  loadTestFile = () => {
+    // Pick a single file
+    let documentPath = RNFS.MainBundlePath; // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+    let filePath = documentPath + "/HourList201403.csv"
+    this.readFile(filePath);
   };
 
   //
