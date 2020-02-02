@@ -32,24 +32,3 @@ export const goToLogin = () =>
       }
     }
   });
-
- export const goToHome = (wageArray, fileHeader) =>
-  Navigation.setRoot({
-    root: {
-      stack: {
-        // create a stack navigation
-        id: "stackHome",
-        children: [
-          {
-            component: {
-              name: "HomeScreen",
-              passProps: {
-                wageArray,
-                fileHeader,
-              }
-            }           
-          }
-        ]
-      }
-    }
-  });

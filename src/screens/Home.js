@@ -6,7 +6,7 @@
  * @flow
  */
 import React, { Component } from "react";
-import { FlatList, Alert, View, Text, Button, StyleSheet } from "react-native";
+import {TouchableOpacity, FlatList, Alert, View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Navigation } from "react-native-navigation";
 
@@ -14,20 +14,22 @@ var RNFS = require("react-native-fs");
 
 export default class Home extends Component {
   render() {
-    const { wageArray, fileHeader } = this.props;
+    const { monthlyWages, fileHeader } = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>
           {fileHeader}
         </Text>
         <FlatList
-          data={wageArray}
+          data={monthlyWages}
           renderItem={({ item }) =>
-            <View>
-              <Text style={styles.text}>
-                {item.id}, {item.name}, ${item.wage}
-              </Text>
-            </View>}
+            <TouchableOpacity onPress={() => this.goToDetails(item.id, item.name)}>
+              <View>
+                <Text style={styles.text}>
+                  {item.id}, {item.name}, ${item.wage}
+                </Text>
+              </View>
+            </TouchableOpacity>}
           keyExtractor={item => item.id}
         />
         <Button
@@ -35,20 +37,15 @@ export default class Home extends Component {
           title="Save date to a file"
           color="#841584"
         />
-        <Button
-          onPress={this.goToDetails}
-          title="Show details"
-          color="#841584"
-        />
       </View>
     );
   }
 
   saveToFile = () => {
-    const { wageArray, fileHeader } = this.props;
+    const { monthlyWages, fileHeader } = this.props;
     let fileContents = [];
     fileContents.push(fileHeader);
-    wageArray.map(item => {
+    monthlyWages.map(item => {
       fileContents.push(
         item.id + ", " + item.name + ", $" + item.wage.toString()
       );
@@ -69,22 +66,25 @@ export default class Home extends Component {
       })
       .catch(err => {
         console.log(err.message);
-        Alert.alert(
-          "Save failed",
-          err.message,
-          [{ text: "OK" }],
-          { cancelable: false }
-        );
+        Alert.alert("Save failed", err.message, [{ text: "OK" }], {
+          cancelable: false
+        });
       });
   };
 
-  goToDetails = () =>
+  goToDetails = (id, name) => {
+    const { shiftsWithWages } = this.props;
+    let detailedShifts = shiftsWithWages.filter(item => item.id == id);
     Navigation.push(this.props.componentId, {
       component: {
         name: "DetailsScreen",
+        passProps: {
+          detailedShifts,
+          name,
+        }
       }
     });
-
+  };
 }
 
 const styles = StyleSheet.create({

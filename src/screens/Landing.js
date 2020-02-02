@@ -32,7 +32,7 @@ export default class Landing extends Component {
       topBar: {
         visible: false,
         title: {
-          text: "Login"
+          text: "Home"
         }
       }
     };
@@ -107,7 +107,7 @@ export default class Landing extends Component {
 
         let fileHeader = this.getFileHeader(shiftsWithWages);
 
-        this.goToHome(monthlyWages, fileHeader);
+        this.goToHome(shiftsWithWages, monthlyWages, fileHeader);
       })
       .catch(err => {
         Alert.alert(
@@ -119,12 +119,13 @@ export default class Landing extends Component {
       });
   };
 
-  goToHome = (wageArray, fileHeader) =>
+  goToHome = (shiftsWithWages, monthlyWages, fileHeader) =>
     Navigation.push(this.props.componentId, {
       component: {
         name: "HomeScreen",
         passProps: {
-          wageArray,
+          shiftsWithWages,
+          monthlyWages,
           fileHeader
         }
       }
@@ -162,11 +163,7 @@ export default class Landing extends Component {
   calculateOvertimeHours = shifts => {
     return shifts.map(shift => {
       return (ShiftWithWorkHours = {
-        name: shift.name,
-        id: shift.id,
-        date: shift.date,
-        totalHours: shift.totalHours,
-        eveningHours: shift.eveningHours,
+        ...shift,
         overtimeHours: this.getOvertimeHours(shift.totalHours)
       });
     });
@@ -280,12 +277,7 @@ export default class Landing extends Component {
   calculateWageForEachShift = uniqueShifts => {
     return uniqueShifts.map(shift => {
       return (ShiftWithWorkHours = {
-        id: shift.id,
-        name: shift.name,
-        date: shift.date,
-        totalHours: shift.totalHours,
-        eveningHours: shift.eveningHours,
-        overtimeHours: shift.overtimeHours,
+        ...shift,
         wage: this.calculateWage(shift.totalHours, shift.eveningHours)
       });
     });
@@ -365,9 +357,7 @@ export default class Landing extends Component {
     );
 
     return (ShiftWithWorkHours = {
-      name: shift.name,
-      id: shift.id,
-      date: shift.date,
+      ...shift,
       totalHours: totalHours,
       eveningHours: eveningHours
     });

@@ -8,18 +8,36 @@
 
 // src/screens/Loading.js
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import {
+  FlatList,
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet
+} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
 export default class Details extends Component {
-  async componentDidMount() {
-  }
 
   render() {
     // show loading indicator
+    const { name, detailedShifts } = this.props;
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.text}>
+          {name}
+        </Text>
+        <FlatList
+          data={detailedShifts}
+          renderItem={({ item }) =>
+            <View>
+              <Text style={styles.text}>
+                {item.date}, {item.totalHours}, {item.eveningHours},{" "}
+                {item.overtimeHours}, ${item.wage}
+              </Text>
+            </View>}
+          keyExtractor={item => item.date}
+        />
       </View>
     );
   }
