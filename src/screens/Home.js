@@ -10,7 +10,6 @@ import { TouchableOpacity, FlatList, Alert, View, Text, StyleSheet } from "react
 import AsyncStorage from "@react-native-community/async-storage";
 import { Navigation } from "react-native-navigation";
 import { Button } from 'react-native-elements';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 var RNFS = require("react-native-fs");
 import { List, ListItem } from "react-native-elements";
 import Icon from 'react-native-vector-icons/FontAwesome';
