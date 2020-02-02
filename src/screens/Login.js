@@ -101,6 +101,10 @@ export default class Login extends Component {
 
         shifts = this.removeHeaderAndFooter(shifts);
 
+        shifts.map(id => {
+          return console.log(id);;
+        });
+
         //Calculate total hours and evening hours
         let shiftsWithWorkHours = this.calculateTotalAndEveningHours(shifts);
 
@@ -375,7 +379,7 @@ export default class Login extends Component {
     console.log("endHour " + endHour);
 
     let totalHours = Math.abs(endHour - startHour);
-    let eveningHours = this.getEveningHours(startHour, endHour);
+    let eveningHours = this.calculateEveningHours(totalHours, startHour, endHour);
 
     return (ShiftWithWorkHours = {
       name: item.name,
@@ -386,74 +390,19 @@ export default class Login extends Component {
     });
   };
 
-  getEveningHours = (startHour, endHour) => {
-    let eveningHours = 0;
-    //Shift is on the same day
-    if (endHour > startHour) {
-      //Calculate evening hours for the shifts on the same day
-      eveningHours = this.calculateEveningHoursForSameDayShifts(
-        startHour,
-        endHour
-      );
-    } else if (endHour < startHour) {
-      //Shifts are overlapping to the next day
-      //Calculate evening hours for the overlapping shifts
-      eveningHours = this.calculateEveningHoursForOverlappingShift(
-        startHour,
-        endHour
-      );
-    }
-    console.log("evening hours is " + eveningHours);
+  calculateEveningHours = (totalHours, startHour, endHour) => {
+    let eveningHours = this.getEveningHours(startHour) + this.getEveningHours(endHour);
+    //Making sure evening hours are not greater than total hours
+    //In case the shift started and ended within the evening time 
+    eveningHours = Math.min(totalHours, eveningHours);
     return eveningHours;
   };
 
-  calculateEveningHoursForSameDayShifts = (startHour, endHour) => {
-    let eveningHours = 0;
-    //Add the early morning hours
-    if (startHour < Constants.EVENING_WORK_END_TIME) {
-      eveningHours += Math.min(
-        Constants.EVENING_WORK_END_TIME,
-        Constants.EVENING_WORK_END_TIME - startHour
-      );
-    }
-
-    //Add the evening hours
-    if (endHour >= Constants.EVENING_WORK_BEGIN_TIME) {
-      eveningHours += endHour - Constants.EVENING_WORK_BEGIN_TIME;
-    }
-
-    //If start and end is in the evening
-    //set the evening hours
-    if (startHour >= Constants.EVENING_WORK_BEGIN_TIME) {
-      eveningHours = endHour - startHour;
-    }
-
-    //If start and end is in the early morning
-    //set the early morning hours
-    if (endHour <= Constants.EVENING_WORK_END_TIME) {
-      eveningHours = endHour - startHour;
-    }
-    return eveningHours;
-  };
-
-  calculateEveningHoursForOverlappingShift = (startHour, endHour) => {
-    let eveningHours = 0;
-    //Add the early hours on the first day
-    if (startHour < Constants.EVENING_WORK_END_TIME) {
-      eveningHours += Constants.EVENING_WORK_END_TIME - startHour;
-    }
-
-    //Add the evening hours on the first day
-    eveningHours += 24 - Math.max(Constants.EVENING_WORK_BEGIN_TIME, startHour);
-
-    //Add the overnight hours from the next day
-    eveningHours += Math.min(Constants.EVENING_WORK_END_TIME, endHour);
-
-    //Add the evening hours on the next day
-    if (endHour >= Constants.EVENING_WORK_BEGIN_TIME) {
-      eveningHours += endHour - Constants.EVENING_WORK_BEGIN_TIME;
-    }
-    return eveningHours;
+  getEveningHours = hour => {
+    return (
+      Math.max(0, Constants.EVENING_WORK_END_TIME - hour) +
+      Math.max(0, hour - Constants.EVENING_WORK_BEGIN_TIME)
+    );
   };
 }
 //
