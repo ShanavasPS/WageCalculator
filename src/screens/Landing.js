@@ -23,8 +23,7 @@ import * as Constants from "../../constants";
 import FileViewer from "react-native-file-viewer";
 import DocumentPicker from "react-native-document-picker";
 import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-Icon.loadFont();
+
 var RNFS = require("react-native-fs");
 
 export default class Landing extends Component {
@@ -38,8 +37,8 @@ export default class Landing extends Component {
           fontSize: 18
         },
         background: {
-          color: '#FFFFFF'
-        },
+          color: '#FBFCFC'
+        }
       }
     };
   }

@@ -12,8 +12,6 @@ import { Navigation } from "react-native-navigation";
 import { Button } from 'react-native-elements';
 var RNFS = require("react-native-fs");
 import { List, ListItem } from "react-native-elements";
-import Icon from 'react-native-vector-icons/FontAwesome';
-Icon.loadFont();
 
 export default class Home extends Component {
   static get options() {
@@ -26,11 +24,18 @@ export default class Home extends Component {
           fontSize: 18
         },
         background: {
-          color: '#FFFFFF'
+          color: '#FBFCFC'
         }
       }
     };
   }
+
+  renderHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>Monthly Wages</Text>
+    </View>
+  )
+
   render() {
     const { monthlyWages, fileHeader } = this.props;
     return (
@@ -46,9 +51,12 @@ export default class Home extends Component {
                 rightTitle={'$' + item.wage}
                 leftAvatar={{ source: { uri: 'https://i.picsum.photos/id/' + index + '/200/200.jpg' } }}
                 bottomDivider
+                chevron
               />
             </TouchableOpacity>
           }
+          stickyHeaderIndices={[0]}
+          ListHeaderComponent={this.renderHeader}
           keyExtractor={item => item.id}
         />
 
@@ -123,5 +131,18 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     padding: 10
+  },
+  header: {
+    padding: 20,
+    borderBottomColor: '#D0D3D4',
+    borderBottomWidth: 0.5,
+    backgroundColor: '#FFFFFF',
+    borderTopColor: '#D0D3D4',
+    borderTopWidth: 0.5,
+    alignItems: "center",
+  },
+  headerText: {
+    fontSize: 16,
+    color: '#2089DC'
   }
 });

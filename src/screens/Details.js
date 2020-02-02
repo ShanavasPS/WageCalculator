@@ -30,11 +30,17 @@ export default class Details extends Component {
           fontSize: 18
         },
         background: {
-          color: '#FFFFFF'
-        }
+          color: '#FBFCFC'
+        },
       }
     };
   }
+
+  renderHeader = (name) => (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>Wage Details for {name}</Text>
+    </View>
+  )
 
   render() {
     // show loading indicator
@@ -57,6 +63,8 @@ export default class Details extends Component {
 
           )}
           keyExtractor={item => item.date}
+          ListHeaderComponent={this.renderHeader(name)}
+          stickyHeaderIndices={[0]}
         />
       </View>
     );
@@ -73,5 +81,18 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     padding: 5
+  },
+  header: {
+    padding: 20,
+    borderBottomColor: '#D0D3D4',
+    borderBottomWidth: 0.5,
+    backgroundColor: '#FFFFFF',
+    borderTopColor: '#D0D3D4',
+    borderTopWidth: 0.5,
+    alignItems: "center",
+  },
+  headerText: {
+    fontSize: 16,
+    color: '#2089DC'
   }
 });

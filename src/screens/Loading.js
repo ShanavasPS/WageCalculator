@@ -16,14 +16,15 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 export default class Loading extends Component {
   async componentDidMount() {
-      goToLogin();
+    goToLogin();
   }
 
   render() {
     // show loading indicator
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={[styles.container, styles.horizontal]}>
+        <Text>Hello</Text>
+        <ActivityIndicator size="large" color="red" />
       </View>
     );
   }
@@ -33,7 +34,13 @@ export default class Loading extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    color: 'red'
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+    color: 'red'
   }
-});
+})
