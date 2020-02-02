@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-import type { Shift, ShiftWithWorkHours, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
 import FileViewer from "react-native-file-viewer";
 import DocumentPicker from "react-native-document-picker";
@@ -155,7 +154,7 @@ export default class Landing extends Component {
     var splitShifts = contents.split("\n");
     let shifts: [Person] = splitShifts.map(item => {
       let shift = item.split(",");
-      return (Person = {
+      return ({
         name: shift[0],
         id: shift[1],
         date: shift[2],

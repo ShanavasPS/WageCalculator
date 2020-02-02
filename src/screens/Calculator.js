@@ -7,28 +7,17 @@
  */
 
 import React, { Component } from "react";
-import type { Shift, ShiftWithWorkHours, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
 
-export function extractShiftsFromCSVFile(contents) {
-    var splitShifts = contents.split("\n");
-    let shifts: [Person] = splitShifts.map(item => {
-      let shift = item.split(",");
-      return (Person = {
-        name: shift[0],
-        id: shift[1],
-        date: shift[2],
-        start: shift[3],
-        end: shift[4]
-      });
-    });
-    return shifts;
-  }
 export function removeHeaderAndFooter(shifts) {
   //Remove the header from the CSV file format
-  shifts.splice(0, 1);
+  if(shifts.length >0) {
+    shifts.splice(0, 1);
+  }
   //Remove the last blank entry
-  shifts.splice(shifts.length - 1, 1);
+  if(shifts.length >0) {
+    shifts.splice(shifts.length - 1, 1);
+  }
   return shifts;
 };
 
@@ -40,7 +29,7 @@ export function calculateTotalAndEveningHours(shifts) {
 
 export function calculateOvertimeHours(shifts) {
   return shifts.map(shift => {
-    return (ShiftWithWorkHours = {
+    return ({
       ...shift,
       overtimeHours: this.getOvertimeHours(shift.totalHours)
     });
@@ -99,7 +88,7 @@ export function calculateMonthlyWage(shiftsWithWorkHours, id) {
 
   let person = this.getPersonDetails(shifts);
 
-  return (PersonWithWage = {
+  return ({
     id: person.id,
     name: person.name,
     date: person.date,
@@ -151,7 +140,7 @@ export function combineMultipleShifts(shifts) {
 //Calculate wage for every day
 export function calculateWageForEachShift(uniqueShifts) {
   return uniqueShifts.map(shift => {
-    return (ShiftWithWorkHours = {
+    return ({
       ...shift,
       wage: this.calculateWage(shift.totalHours, shift.eveningHours)
     });
@@ -227,7 +216,7 @@ export function calculateTotalAndEveningHoursForShift(shift) {
   let totalHours = Math.abs(endHour - startHour);
   let eveningHours = this.calculateEveningHours(totalHours, startHour, endHour);
 
-  return (ShiftWithWorkHours = {
+  return ({
     ...shift,
     totalHours: totalHours,
     eveningHours: eveningHours
