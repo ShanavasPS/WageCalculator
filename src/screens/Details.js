@@ -19,6 +19,22 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 export default class Details extends Component {
 
+  static get options() {
+    return {
+      topBar: {
+        visible: true,
+        title: {
+          text: "Details",
+          color: '#2089DC',
+          fontSize: 18
+        },
+        background: {
+          color: '#FFFFFF'
+        }
+      }
+    };
+  }
+  
   render() {
     // show loading indicator
     const { name, detailedShifts } = this.props;

@@ -12,7 +12,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   TouchableOpacity,
   StyleSheet,
   Alert
@@ -23,17 +22,24 @@ import type { Shift, ShiftWithWorkHours, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
 import FileViewer from "react-native-file-viewer";
 import DocumentPicker from "react-native-document-picker";
-
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+Icon.loadFont();
 var RNFS = require("react-native-fs");
 
 export default class Landing extends Component {
   static get options() {
     return {
       topBar: {
-        visible: false,
+        visible: true,
         title: {
-          text: "Home"
-        }
+          text: "Wage Calculator",
+          color: '#2089DC',
+          fontSize: 18
+        },
+        background: {
+          color: '#FFFFFF'
+        },
       }
     };
   }
@@ -45,8 +51,9 @@ export default class Landing extends Component {
           <View style={styles.main}>
             <Button
               title="Open CSV File"
-              color="#0064e1"
+              buttonStyle={{ width: "100%" }}
               onPress={this.openCSVFile}
+              type="outline"
             />
           </View>
         </View>
@@ -237,7 +244,7 @@ export default class Landing extends Component {
   };
 
   getPersonDetails = shifts => {
-    return shifts.reduce(function(acc, item) {
+    return shifts.reduce(function (acc, item) {
       return item;
     }, {});
   };
@@ -391,7 +398,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20
   },
   fieldContainer: {
     marginTop: 20
@@ -400,7 +406,6 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   textInput: {
-    height: 40,
     marginTop: 5,
     marginBottom: 10,
     borderColor: "#ccc",
@@ -412,7 +417,6 @@ const styles = StyleSheet.create({
     color: "#2e45ec"
   },
   center: {
-    alignSelf: "center",
-    marginTop: 10
+    alignSelf: "center"
   }
 });
