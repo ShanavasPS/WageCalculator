@@ -8,6 +8,7 @@
 
 import React, { Component } from "react";
 import type { Shift, ShiftWithWorkHours, PersonWithWage } from "../../types";
+import * as Constants from "../../constants";
 
 export function extractShiftsFromCSVFile(contents) {
     var splitShifts = contents.split("\n");
