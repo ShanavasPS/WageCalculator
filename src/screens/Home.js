@@ -35,7 +35,6 @@ export default class Home extends Component {
       </View>
     );
   }
-  //
 
   upload = async () => {
     goToLogin();
@@ -49,7 +48,6 @@ export default class Home extends Component {
       fileContents.push(item.id + ", " + item.name + ", $" + item.wage.toString());
     });
 
-    console.log('join output is' + fileContents.join("\n"));
     var path = RNFS.DocumentDirectoryPath + "/output.txt";
 
     // write the file

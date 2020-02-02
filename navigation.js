@@ -8,10 +8,10 @@
 
 import { Navigation } from "react-native-navigation";
 
-import Login from "./src/screens/Login";
+import Landing from "./src/screens/Landing";
 import Home from "./src/screens/Home";
 
-Navigation.registerComponent(`LoginScreen`, () => Login);
+Navigation.registerComponent(`LandingScreen`, () => Landing);
 Navigation.registerComponent(`HomeScreen`, () => Home);
 
 export const goToLogin = () =>
@@ -23,16 +23,13 @@ export const goToLogin = () =>
         children: [
           {
             component: {
-              name: "LoginScreen"
+              name: "LandingScreen"
             }
           }
         ]
       }
     }
   });
-
-  const iconColor = "#444";
-const selectedIconColor = "#0089da";
 
  export const goToHome = (wageArray, fileHeader) =>
   Navigation.setRoot({
