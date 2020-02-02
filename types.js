@@ -6,7 +6,7 @@
  * @flow
  */
 
-export type Person = {
+export type Shift = {
   name: string,
   id: string,
   date: string,
@@ -14,12 +14,12 @@ export type Person = {
   end: string,
 }
 
-export type PersonWithWorkTime = {
+export type ShiftWithWorkHours = {
   name: string,
   id: string,
   date: string,
-  workingHour: int,
-  eveningHour: int,
+  totalHours: int,
+  eveningHours: int,
 }
 
 export type PersonWithWage= {
