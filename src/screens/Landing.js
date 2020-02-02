@@ -15,11 +15,10 @@ import {
   Button,
   TouchableOpacity,
   StyleSheet,
-  Alert,
+  Alert
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-import { goToHome } from "../../navigation";
 import type { Shift, ShiftWithWorkHours, PersonWithWage } from "../../types";
 import * as Constants from "../../constants";
 import FileViewer from "react-native-file-viewer";
@@ -84,22 +83,31 @@ export default class Landing extends Component {
         //Calculate total hours and evening hours
         let shiftsWithWorkHours = this.calculateTotalAndEveningHours(shifts);
 
-        //Now find the number of unique persons in the shift
-        let uniquePersons = this.findUniquePersonsInTheShifts(
+        //Combine multiple shifts of the same person on the same day into one
+        shiftsWithWorkHours = this.combineMultipleShifts(shiftsWithWorkHours);
+
+        let shiftsWithOverTime = this.calculateOvertimeHours(
           shiftsWithWorkHours
         );
+
+        let shiftsWithWages = this.calculateWageForEachShift(
+          shiftsWithOverTime
+        );
+
+        //Now find the number of unique persons in the shift
+        let uniquePersons = this.findUniquePersonsInTheShifts(shiftsWithWages);
 
         let sortedPersons = this.sortPersons(uniquePersons);
 
         //Calculate wage for each distinct person
         let monthlyWages = this.calculateMonthlyWageForAllThePersons(
-          shiftsWithWorkHours,
+          shiftsWithWages,
           sortedPersons
         );
 
-        let fileHeader = this.getFileHeader(shiftsWithWorkHours);
+        let fileHeader = this.getFileHeader(shiftsWithWages);
 
-        goToHome(monthlyWages, fileHeader);
+        this.goToHome(monthlyWages, fileHeader);
       })
       .catch(err => {
         Alert.alert(
@@ -110,6 +118,17 @@ export default class Landing extends Component {
         );
       });
   };
+
+  goToHome = (wageArray, fileHeader) =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: "HomeScreen",
+        passProps: {
+          wageArray,
+          fileHeader
+        }
+      }
+    });
 
   extractShiftsFromCSVFile(contents) {
     var splitShifts = contents.split("\n");
@@ -138,6 +157,23 @@ export default class Landing extends Component {
     return shifts.map(shift => {
       return this.calculateTotalAndEveningHoursForShift(shift);
     });
+  };
+
+  calculateOvertimeHours = shifts => {
+    return shifts.map(shift => {
+      return (ShiftWithWorkHours = {
+        name: shift.name,
+        id: shift.id,
+        date: shift.date,
+        totalHours: shift.totalHours,
+        eveningHours: shift.eveningHours,
+        overtimeHours: this.getOvertimeHours(shift.totalHours)
+      });
+    });
+  };
+
+  getOvertimeHours = hours => {
+    return Math.max(0, hours - Constants.OVERTIME_THRESHOLD);
   };
 
   getHoursFromTime = time => {
@@ -178,24 +214,18 @@ export default class Landing extends Component {
     uniquePersons
   ) => {
     //Now separate each person from the list using their id
-    let wages: [PersonWithWage] = uniquePersons.map(id => {
+    return uniquePersons.map(id => {
       return this.calculateMonthlyWage(shiftsWithWorkHours, id);
     });
-
-    return wages;
   };
 
   calculateMonthlyWage = (shiftsWithWorkHours, id) => {
     //Extarct the shifts of the current person
-    let shifts = shiftsWithWorkHours.filter(item => item.id == id);
+    let shifts = this.getTheShiftsOfThePersonWithId(shiftsWithWorkHours, id);
 
-    let combinedShifts = this.combineMultipleShifts(shifts);
+    let totalWage = this.calculateTotalWageForAllTheShifts(shifts);
 
-    let combinedShiftWithWages = this.calculateWageForEachShift(combinedShifts);
-
-    let totalWage = this.getTheTotalWageForAllTheShifts(combinedShiftWithWages);
-
-    let person = this.getPersonDetails(combinedShifts);
+    let person = this.getPersonDetails(shifts);
 
     return (PersonWithWage = {
       id: person.id,
@@ -205,14 +235,18 @@ export default class Landing extends Component {
     });
   };
 
-  getPersonDetails = combinedShifts => {
-    return combinedShifts.reduce(function(acc, item) {
+  getTheShiftsOfThePersonWithId = (shifts, id) => {
+    return shifts.filter(item => item.id == id);
+  };
+
+  getPersonDetails = shifts => {
+    return shifts.reduce(function(acc, item) {
       return item;
     }, {});
   };
 
-  getTheTotalWageForAllTheShifts = combinedShifts => {
-    return combinedShifts.reduce(
+  calculateTotalWageForAllTheShifts = shifts => {
+    return shifts.reduce(
       (prevValue, currentValue) => prevValue + currentValue.wage,
       0
     );
@@ -222,14 +256,20 @@ export default class Landing extends Component {
     //Combine mutliple shifts into one.
     let uniqueShifts = [];
     shifts.map(item => {
-      let shift = uniqueShifts.filter(shift => shift.date === item.date);
+      //filter the current array to find if it already has the shift
+      let shift = uniqueShifts.filter(
+        shift => shift.date === item.date && shift.id == item.id
+      );
+      //Check if filtered array contains an element.
       if (shift.length > 0) {
+        //If yes, add the total hours and evening hours
         let index = uniqueShifts.indexOf(shift[0]);
         if (index != -1) {
           uniqueShifts[index].totalHours += item.totalHours;
           uniqueShifts[index].eveningHours += item.eveningHours;
         }
       } else {
+        //If not, add the new shift to the array
         uniqueShifts.push(item);
       }
     });
@@ -239,10 +279,13 @@ export default class Landing extends Component {
   //Calculate wage for every day
   calculateWageForEachShift = uniqueShifts => {
     return uniqueShifts.map(shift => {
-      return (PersonWithWage = {
+      return (ShiftWithWorkHours = {
         id: shift.id,
         name: shift.name,
         date: shift.date,
+        totalHours: shift.totalHours,
+        eveningHours: shift.eveningHours,
+        overtimeHours: shift.overtimeHours,
         wage: this.calculateWage(shift.totalHours, shift.eveningHours)
       });
     });
@@ -277,21 +320,21 @@ export default class Landing extends Component {
     let overtimeWage = 0;
 
     //Find the overtime hours eligible for additional quarter hourly rate
-    let quarterOvertimeHours = this.getOvertimeHours(
+    let quarterOvertimeHours = this.getOvertime(
       0,
       Constants.QUARTER_OVERTIME_THRESHOLD,
       overtimeHours
     );
 
     //Find the overtime hours eligible for additional half hourly rate
-    let halfOvertimeHours = this.getOvertimeHours(
+    let halfOvertimeHours = this.getOvertime(
       Constants.QUARTER_OVERTIME_THRESHOLD,
       Constants.HALF_OVERTIME_THRESHOLD,
       overtimeHours
     );
 
     //Find the overtime hours eligible for additional full hourly rate
-    let fullOvertimeHours = this.getOvertimeHours(
+    let fullOvertimeHours = this.getOvertime(
       Constants.HALF_OVERTIME_THRESHOLD,
       overtimeHours,
       overtimeHours
@@ -306,7 +349,7 @@ export default class Landing extends Component {
 
   //This method calculates the hours between the control and hours
   //by using a limit threshold
-  getOvertimeHours = (control, limit, hours) => {
+  getOvertime = (control, limit, hours) => {
     return Math.min(Math.max(0, limit - control), Math.max(0, hours - control));
   };
 

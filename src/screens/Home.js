@@ -8,8 +8,8 @@
 import React, { Component } from "react";
 import { FlatList, Alert, View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import { Navigation } from "react-native-navigation";
 
-import { goToLogin } from "../../navigation";
 var RNFS = require("react-native-fs");
 
 export default class Home extends Component {
@@ -35,14 +35,14 @@ export default class Home extends Component {
           title="Save date to a file"
           color="#841584"
         />
-        <Button onPress={this.upload} title="Upload new file" color="#841584" />
+        <Button
+          onPress={this.goToDetails}
+          title="Show details"
+          color="#841584"
+        />
       </View>
     );
   }
-
-  upload = async () => {
-    goToLogin();
-  };
 
   saveToFile = () => {
     const { wageArray, fileHeader } = this.props;
@@ -77,6 +77,14 @@ export default class Home extends Component {
         );
       });
   };
+
+  goToDetails = () =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: "DetailsScreen",
+      }
+    });
+
 }
 
 const styles = StyleSheet.create({

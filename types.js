@@ -20,6 +20,8 @@ export type ShiftWithWorkHours = {
   date: string,
   totalHours: int,
   eveningHours: int,
+  overtimeHours: int,
+  wage: float,
 }
 
 export type PersonWithWage= {
