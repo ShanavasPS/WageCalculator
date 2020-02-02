@@ -14,7 +14,8 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -101,7 +102,12 @@ export default class Landing extends Component {
         goToHome(monthlyWages, fileHeader);
       })
       .catch(err => {
-        console.log(err.message, err.code);
+        Alert.alert(
+          "Failed to read file",
+          "Please upload a valid csv file",
+          [{ text: "OK" }],
+          { cancelable: false }
+        );
       });
   };
 
