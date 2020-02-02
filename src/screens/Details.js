@@ -16,6 +16,7 @@ import {
   StyleSheet
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import { ListItem } from "react-native-elements";
 
 export default class Details extends Component {
 
@@ -34,24 +35,27 @@ export default class Details extends Component {
       }
     };
   }
-  
+
   render() {
     // show loading indicator
     const { name, detailedShifts } = this.props;
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          {name}
-        </Text>
+      <View style={styles.wrapper}>
         <FlatList
           data={detailedShifts}
-          renderItem={({ item }) =>
-            <View>
-              <Text style={styles.text}>
-                {item.date}, {item.totalHours}, {item.eveningHours},{" "}
-                {item.overtimeHours}, ${item.wage}
-              </Text>
-            </View>}
+          renderItem={({ item, index }) => (
+
+            <ListItem
+              key={index}
+              title={item.date}
+              rightTitle={'$' + item.wage}
+              subtitle={'Total\nEvening\nOvertime'}
+              subtitleStyle={styles.subtitle}
+              rightSubtitle={item.totalHours + 'h\n' + item.eveningHours + 'h\n' + item.overtimeHours + 'h'}
+              bottomDivider
+            />
+
+          )}
           keyExtractor={item => item.date}
         />
       </View>
@@ -65,5 +69,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  subtitle: {
+    fontSize: 14,
+    padding: 5
   }
 });

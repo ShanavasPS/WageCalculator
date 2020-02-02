@@ -44,7 +44,7 @@ export default class Home extends Component {
                 roundAvatar
                 key={index}
                 title={item.name}
-                subtitle={'$' + item.wage}
+                rightTitle={'$' + item.wage}
                 leftAvatar={{ source: { uri: 'https://i.picsum.photos/id/' + index + '/200/200.jpg' } }}
                 bottomDivider
               />
