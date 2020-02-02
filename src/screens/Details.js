@@ -6,7 +6,6 @@
  * @flow
  */
 
-// src/screens/Loading.js
 import React, { Component } from "react";
 import {
   FlatList,
@@ -43,7 +42,6 @@ export default class Details extends Component {
   )
 
   render() {
-    // show loading indicator
     const { name, detailedShifts } = this.props;
     return (
       <View style={styles.wrapper}>

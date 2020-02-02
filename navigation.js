@@ -16,7 +16,7 @@ Navigation.registerComponent(`LandingScreen`, () => Landing);
 Navigation.registerComponent(`HomeScreen`, () => Home);
 Navigation.registerComponent(`DetailsScreen`, () => Details);
 
-export const goToLogin = () =>
+export const goToLandingScreen = () =>
   Navigation.setRoot({
     root: {
       stack: {
