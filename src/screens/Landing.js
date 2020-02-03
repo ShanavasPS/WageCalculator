@@ -83,13 +83,13 @@ export default class Landing extends Component {
   loadTestFile = () => {
     let filename = "HourList201403.csv";
     if (Platform.OS === 'ios') {
-      this.readFileiOS(RNFS.MainBundlePath + "/" + filename);
+      this.readFile(RNFS.MainBundlePath + "/" + filename);
     } else {
       this.readFileAndroid(filename);
     }
   };
 
-  readFileiOS = async filePath => {
+  readFile = async filePath => {
     RNFS.readFile(filePath, "utf8")
       .then(contents => {
         // log the file contents
