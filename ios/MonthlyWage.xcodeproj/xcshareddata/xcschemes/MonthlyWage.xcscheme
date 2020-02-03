@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "navigation_react_native.app"
-               BlueprintName = "navigation_react_native"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWage.app"
+               BlueprintName = "MonthlyWage"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "navigation_react_nativeTests.xctest"
-               BlueprintName = "navigation_react_nativeTests"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWageTests.xctest"
+               BlueprintName = "MonthlyWageTests"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -59,9 +59,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "navigation_react_native.app"
-            BlueprintName = "navigation_react_native"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage.app"
+            BlueprintName = "MonthlyWage"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -70,9 +70,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "navigation_react_nativeTests.xctest"
-               BlueprintName = "navigation_react_nativeTests"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWageTests.xctest"
+               BlueprintName = "MonthlyWageTests"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,9 +92,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "navigation_react_native.app"
-            BlueprintName = "navigation_react_native"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage.app"
+            BlueprintName = "MonthlyWage"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -109,9 +109,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "navigation_react_native.app"
-            BlueprintName = "navigation_react_native"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage.app"
+            BlueprintName = "MonthlyWage"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

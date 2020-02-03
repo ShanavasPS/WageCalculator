@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'navigation_react_native' do
-  # Pods for navigation_react_native
+target 'MonthlyWage' do
+  # Pods for MonthlyWage
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -35,7 +35,7 @@ target 'navigation_react_native' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   
-  target 'navigation_react_nativeTests' do
+  target 'MonthlyWageTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -43,10 +43,10 @@ target 'navigation_react_native' do
   use_native_modules!
 end
 
-target 'navigation_react_native-tvOS' do
-  # Pods for navigation_react_native-tvOS
+target 'MonthlyWage-tvOS' do
+  # Pods for MonthlyWage-tvOS
 
-  target 'navigation_react_native-tvOSTests' do
+  target 'MonthlyWage-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

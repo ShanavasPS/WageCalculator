@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "navigation_react_native-tvOS.app"
-               BlueprintName = "navigation_react_native-tvOS"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWage-tvOS.app"
+               BlueprintName = "MonthlyWage-tvOS"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "navigation_react_native-tvOSTests.xctest"
-               BlueprintName = "navigation_react_native-tvOSTests"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWage-tvOSTests.xctest"
+               BlueprintName = "MonthlyWage-tvOSTests"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -59,9 +59,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "navigation_react_native-tvOS.app"
-            BlueprintName = "navigation_react_native-tvOS"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage-tvOS.app"
+            BlueprintName = "MonthlyWage-tvOS"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -70,9 +70,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "navigation_react_native-tvOSTests.xctest"
-               BlueprintName = "navigation_react_native-tvOSTests"
-               ReferencedContainer = "container:navigation_react_native.xcodeproj">
+               BuildableName = "MonthlyWage-tvOSTests.xctest"
+               BlueprintName = "MonthlyWage-tvOSTests"
+               ReferencedContainer = "container:MonthlyWage.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,9 +92,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "navigation_react_native-tvOS.app"
-            BlueprintName = "navigation_react_native-tvOS"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage-tvOS.app"
+            BlueprintName = "MonthlyWage-tvOS"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -109,9 +109,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "navigation_react_native-tvOS.app"
-            BlueprintName = "navigation_react_native-tvOS"
-            ReferencedContainer = "container:navigation_react_native.xcodeproj">
+            BuildableName = "MonthlyWage-tvOS.app"
+            BlueprintName = "MonthlyWage-tvOS"
+            ReferencedContainer = "container:MonthlyWage.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
