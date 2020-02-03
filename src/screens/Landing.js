@@ -47,7 +47,7 @@ export default class Landing extends Component {
           <View style={styles.main}>
             <Button
               title="Upload CSV File"
-              buttonStyle={{ width: "100%" }}
+              buttonStyle={{ width: "100%", marginBottom: 20 }}
               onPress={this.openCSVFile}
               type="outline"
             />

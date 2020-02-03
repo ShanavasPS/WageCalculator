@@ -25,7 +25,6 @@ export default class Details extends Component {
         visible: true,
         title: {
           text: "Details",
-          color: '#2089DC',
           fontSize: 18
         },
         background: {
@@ -91,6 +90,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    color: '#2089DC'
+    alignItems: "center"
   }
 });

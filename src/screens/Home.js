@@ -33,6 +33,11 @@ export default class Home extends Component {
   renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.headerText}>Monthly Wages</Text>
+      <Button style={styles.buttonStyle}
+        title="Export data"
+        onPress={this.saveToFile}
+        type="outline"
+      />
     </View>
   )
 
@@ -59,16 +64,6 @@ export default class Home extends Component {
           ListHeaderComponent={this.renderHeader}
           keyExtractor={item => item.id}
         />
-
-
-        <View style={styles.buttonGroup}>
-          <Button style={styles.buttonStyle}
-            title="Export data"
-            onPress={this.saveToFile}
-            buttonStyle={{ width: "100%" }}
-            type="outline"
-          />
-        </View>
       </View>
     );
   }
@@ -130,7 +125,6 @@ const styles = StyleSheet.create({
     marginBottom: 100
   },
   buttonStyle: {
-    padding: 10
   },
   header: {
     padding: 20,
@@ -140,9 +134,11 @@ const styles = StyleSheet.create({
     borderTopColor: '#D0D3D4',
     borderTopWidth: 0.5,
     alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
   },
   headerText: {
     fontSize: 16,
-    color: '#2089DC'
+    alignItems: "center"
   }
 });
