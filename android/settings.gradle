@@ -1,4 +1,4 @@
-rootProject.name = 'navigation_react_native'
+rootProject.name = 'MonthlyWage'
 
 include ':react-native-navigation'
 project(':react-native-navigation').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-navigation/lib/android/app/')

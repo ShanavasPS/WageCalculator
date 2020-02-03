@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.navigation_react_native">
+  package="com.monthlywage">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

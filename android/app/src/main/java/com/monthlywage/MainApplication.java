@@ -1,4 +1,4 @@
-package com.navigation_react_native;
+package com.monthlywage;
 
 import android.app.Application;
 import android.content.Context;

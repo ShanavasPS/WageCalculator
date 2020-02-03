@@ -1,4 +1,4 @@
-package com.navigation_react_native;
+package com.monthlywage;
 
 import com.reactnativenavigation.NavigationActivity;
 
