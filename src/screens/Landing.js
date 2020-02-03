@@ -10,9 +10,6 @@ import React, { Component } from "react";
 import { Navigation } from "react-native-navigation";
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
   Alert
 } from "react-native";
@@ -84,49 +81,19 @@ export default class Landing extends Component {
   };
 
   loadTestFile = () => {
-    // Pick a single file
-    let documentPath = RNFS.MainBundlePath; // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-    let filePath = documentPath + "/HourList201403.csv"
-    this.readFile(filePath);
+    let filename = "HourList201403.csv";
+    if (Platform.OS === 'ios') {
+      this.readFileiOS(RNFS.MainBundlePath + "/" + filename);
+    } else {
+      this.readFileAndroid(filename);
+    }
   };
 
-  //
-  readFile = async filePath => {
+  readFileiOS = async filePath => {
     RNFS.readFile(filePath, "utf8")
       .then(contents => {
         // log the file contents
-        let shifts = this.extractShiftsFromCSVFile(contents);
-
-        shifts = Calculator.removeHeaderAndFooter(shifts);
-      
-        //Calculate total hours and evening hours
-        let shiftsWithWorkHours = Calculator.calculateTotalAndEveningHours(shifts);
-
-        //Combine multiple shifts of the same person on the same day into one
-        shiftsWithWorkHours = Calculator.combineMultipleShifts(shiftsWithWorkHours);
-
-        let shiftsWithOverTime = Calculator.calculateOvertimeHours(
-          shiftsWithWorkHours
-        );
-
-        let shiftsWithWages = Calculator.calculateWageForEachShift(
-          shiftsWithOverTime
-        );
-
-        //Now find the number of unique persons in the shift
-        let uniquePersons = Calculator.findUniquePersonsInTheShifts(shiftsWithWages);
-
-        let sortedPersons = Calculator.sortPersons(uniquePersons);
-
-        //Calculate wage for each distinct person
-        let monthlyWages = Calculator.calculateMonthlyWageForAllThePersons(
-          shiftsWithWages,
-          sortedPersons
-        );
-
-        let fileHeader = Calculator.getFileHeader(shiftsWithWages);
-
-        this.goToHome(shiftsWithWages, monthlyWages, fileHeader);
+        this.calculateMonthlyWages(contents);
       })
       .catch(err => {
         Alert.alert(
@@ -137,6 +104,57 @@ export default class Landing extends Component {
         );
       });
   };
+
+  readFileAndroid = async filePath => {
+    RNFS.readFileAssets(filePath, "utf8")
+      .then(contents => {
+        // log the file contents
+        this.calculateMonthlyWages(contents);
+      })
+      .catch(err => {
+        Alert.alert(
+          "Failed to read file",
+          "Please upload a valid csv file",
+          [{ text: "OK" }],
+          { cancelable: false }
+        );
+      });
+  };
+
+  calculateMonthlyWages = contents => {
+    let shifts = this.extractShiftsFromCSVFile(contents);
+
+    shifts = Calculator.removeHeaderAndFooter(shifts);
+
+    //Calculate total hours and evening hours
+    let shiftsWithWorkHours = Calculator.calculateTotalAndEveningHours(shifts);
+
+    //Combine multiple shifts of the same person on the same day into one
+    shiftsWithWorkHours = Calculator.combineMultipleShifts(shiftsWithWorkHours);
+
+    let shiftsWithOverTime = Calculator.calculateOvertimeHours(
+      shiftsWithWorkHours
+    );
+
+    let shiftsWithWages = Calculator.calculateWageForEachShift(
+      shiftsWithOverTime
+    );
+
+    //Now find the number of unique persons in the shift
+    let uniquePersons = Calculator.findUniquePersonsInTheShifts(shiftsWithWages);
+
+    let sortedPersons = Calculator.sortPersons(uniquePersons);
+
+    //Calculate wage for each distinct person
+    let monthlyWages = Calculator.calculateMonthlyWageForAllThePersons(
+      shiftsWithWages,
+      sortedPersons
+    );
+
+    let fileHeader = Calculator.getFileHeader(shiftsWithWages);
+
+    this.goToHome(shiftsWithWages, monthlyWages, fileHeader);
+  }
 
   goToHome = (shiftsWithWages, monthlyWages, fileHeader) =>
     Navigation.push(this.props.componentId, {
@@ -152,7 +170,7 @@ export default class Landing extends Component {
 
   extractShiftsFromCSVFile(contents) {
     var splitShifts = contents.split("\n");
-    let shifts: [Person] = splitShifts.map(item => {
+    let shifts = splitShifts.map(item => {
       let shift = item.split(",");
       return ({
         name: shift[0],
