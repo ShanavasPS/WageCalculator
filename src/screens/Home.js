@@ -30,9 +30,9 @@ export default class Home extends Component {
     };
   }
 
-  renderHeader = () => (
+  renderHeader = (fileHeader) => (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Monthly Wages</Text>
+      <Text style={styles.headerText}>{fileHeader}</Text>
       <Button style={styles.buttonStyle}
         title="Export data"
         onPress={this.saveToFile}
@@ -61,7 +61,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           }
           stickyHeaderIndices={[0]}
-          ListHeaderComponent={this.renderHeader}
+          ListHeaderComponent={() => this.renderHeader(fileHeader)}
           keyExtractor={item => item.id}
         />
       </View>
