@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * Monthly Wage App
  * https://github.com/facebook/react-native
  *
  * @format

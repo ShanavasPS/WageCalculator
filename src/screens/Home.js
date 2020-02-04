@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * Monthly Wage App
  * https://github.com/facebook/react-native
  *
  * @format
@@ -68,6 +68,7 @@ export default class Home extends Component {
     );
   }
 
+  //Method to save the shift data to a file in the directory folder
   saveToFile = () => {
     const { monthlyWages, fileHeader } = this.props;
     let fileContents = [];
@@ -91,9 +92,10 @@ export default class Home extends Component {
       });
   };
 
+  //Method to navigate to the selected shift
   goToDetails = (id, name) => {
-    const { shiftsWithWages } = this.props;
-    let detailedShifts = shiftsWithWages.filter(item => item.id == id);
+    const { shifts } = this.props;
+    let detailedShifts = shifts.filter(item => item.id == id);
     Navigation.push(this.props.componentId, {
       component: {
         name: "DetailsScreen",

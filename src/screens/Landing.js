@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * Monthly Wage App
  * https://github.com/facebook/react-native
  *
  * @format
@@ -8,16 +8,13 @@
 
 import React, { Component } from "react";
 import { Navigation } from "react-native-navigation";
-import {
-  View,
-  StyleSheet
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import DocumentPicker from "react-native-document-picker";
-import { Button } from 'react-native-elements';
+import { Button } from "react-native-elements";
 import * as Calculator from "./Calculator";
 
 var RNFS = require("react-native-fs");
-import {showOKAlert } from "./Common"
+import { showOKAlert } from "./Common";
 
 export default class Landing extends Component {
   static get options() {
@@ -26,11 +23,11 @@ export default class Landing extends Component {
         visible: true,
         title: {
           text: "Wage Calculator",
-          color: '#2089DC',
+          color: "#2089DC",
           fontSize: 18
         },
         background: {
-          color: '#FBFCFC'
+          color: "#FBFCFC"
         }
       }
     };
@@ -59,7 +56,7 @@ export default class Landing extends Component {
     );
   }
 
-  //
+  //This method opens a document picker
   openCSVFile = async () => {
     // Pick a single file
     try {
@@ -76,15 +73,19 @@ export default class Landing extends Component {
     }
   };
 
+  //This method loads a test CSV file bundled within the application
+  //so that the application can be easily tested
   loadTestFile = () => {
     let filename = "HourList201403.csv";
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       this.readFile(RNFS.MainBundlePath + "/" + filename);
     } else {
       this.readFileAndroid(filename);
     }
   };
 
+  //This method is used to read the bundled CSV file in iOS
+  //and for reading the selected file from the document picker
   readFile = async filePath => {
     RNFS.readFile(filePath, "utf8")
       .then(contents => {
@@ -96,6 +97,8 @@ export default class Landing extends Component {
       });
   };
 
+  //This method is used to read the test CSV file from the android assets folder
+  //as the normal read function does not work for android assets folder.
   readFileAndroid = async filePath => {
     RNFS.readFileAssets(filePath, "utf8")
       .then(contents => {
@@ -107,64 +110,70 @@ export default class Landing extends Component {
       });
   };
 
+  //This method details the steps performed to calulate the monthly wage
+  //from the given CSV file
   calculateMonthlyWages = contents => {
+    //First, extract the shifts from the CSV file
     let shifts = this.extractShiftsFromCSVFile(contents);
-
+    //then removes the header and footer inorder to removed invalid values
     shifts = Calculator.removeHeaderAndFooter(shifts);
 
     //Calculate total hours and evening hours
-    let shiftsWithWorkHours = Calculator.calculateTotalAndEveningHours(shifts);
+    shifts = Calculator.calculateTotalAndEveningHours(shifts);
 
     //Combine multiple shifts of the same person on the same day into one
-    shiftsWithWorkHours = Calculator.combineMultipleShifts(shiftsWithWorkHours);
+    shifts = Calculator.combineMultipleShifts(shifts);
 
-    let shiftsWithOverTime = Calculator.calculateOvertimeHours(
-      shiftsWithWorkHours
-    );
+    //Calculate the overtime now as the same day shifts are combined
+    shifts = Calculator.calculateOvertimeHours(shifts);
 
-    let shiftsWithWages = Calculator.calculateWageForEachShift(
-      shiftsWithOverTime
-    );
+    //Calculate the wage for each shift now that we have total, evening and overtime hours
+    shifts = Calculator.calculateWageForEachShift(shifts);
 
     //Now find the number of unique persons in the shift
-    let uniquePersons = Calculator.findUniquePersonsInTheShifts(shiftsWithWages);
+    let uniquePersons = Calculator.findUniquePersonsInTheShifts(shifts);
 
-    let sortedPersons = Calculator.sortPersons(uniquePersons);
+    //Sort the array now, so that its faster than sorting the entire shifts array.
+    uniquePersons = Calculator.sortPersons(uniquePersons);
 
     //Calculate wage for each distinct person
     let monthlyWages = Calculator.calculateMonthlyWageForAllThePersons(
-      shiftsWithWages,
-      sortedPersons
+      shifts,
+      uniquePersons
     );
 
-    let fileHeader = Calculator.getFileHeader(shiftsWithWages);
+    //Get the title/header to be displayed on top of the monthly wage
+    let fileHeader = Calculator.getFileHeader(shifts);
 
-    this.goToHome(shiftsWithWages, monthlyWages, fileHeader);
-  }
+    //Navigate to the home screen
+    this.goToHome(shifts, monthlyWages, fileHeader);
+  };
 
-  goToHome = (shiftsWithWages, monthlyWages, fileHeader) =>
+  //Method to navigate to the home screen with the details of the monthly wage
+  goToHome = (shifts, monthlyWages, fileHeader) =>
     Navigation.push(this.props.componentId, {
       component: {
         name: "HomeScreen",
         passProps: {
-          shiftsWithWages,
+          shifts,
           monthlyWages,
           fileHeader
         }
       }
     });
 
+  //Method extracts shifts from a given CSV file
   extractShiftsFromCSVFile(contents) {
     var splitShifts = contents.split("\n");
     let shifts = splitShifts.map(item => {
       let shift = item.split(",");
-      return ({
+      return {
         name: shift[0],
         id: shift[1],
         date: shift[2],
         start: shift[3],
         end: shift[4]
-      });
+      };
     });
     return shifts;
   }
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   fieldContainer: {
     marginTop: 20

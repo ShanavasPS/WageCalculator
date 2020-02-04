@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * Monthly Wage App
  * https://github.com/facebook/react-native
  *
  * @format
@@ -9,6 +9,8 @@
 import React, { Component } from "react";
 import * as Constants from "../../constants";
 
+//This function removes the header and footer from 
+//a given shift so it only has proper shift data
 export function removeHeaderAndFooter(shifts) {
   //Remove the header from the CSV file format
   if(shifts.length >0) {
@@ -21,12 +23,16 @@ export function removeHeaderAndFooter(shifts) {
   return shifts;
 };
 
+//This function iterates through the given shifts
+//and calculates the total and evening hours
 export function calculateTotalAndEveningHours(shifts) {
   return shifts.map(shift => {
     return this.calculateTotalAndEveningHoursForShift(shift);
   });
 };
 
+//This function calculates the overtime hours
+//in a given shift
 export function calculateOvertimeHours(shifts) {
   return shifts.map(shift => {
     return ({
@@ -36,10 +42,13 @@ export function calculateOvertimeHours(shifts) {
   });
 };
 
+//This function calculates the overtime hours from the total hours
 export function getOvertimeHours(hours) {
   return Math.max(0, hours - Constants.OVERTIME_THRESHOLD);
 };
 
+//This function extracts the hour and minute from a given time
+//and returns the hours in decimal format.
 export function getHoursFromTime(time) {
   let hourMin = time.split(":");
   let hour = parseInt(hourMin[0]);
@@ -47,6 +56,8 @@ export function getHoursFromTime(time) {
   return hour + min / 60;
 };
 
+//This functions finds the unique persons in the shifts
+//and returns an array with their ids
 export function findUniquePersonsInTheShifts(shiftsWithWorkHours) {
   let uniquePersons = [];
   shiftsWithWorkHours.map(item => {
@@ -57,11 +68,14 @@ export function findUniquePersonsInTheShifts(shiftsWithWorkHours) {
   return uniquePersons;
 };
 
+//This function sorts the id of the persons in incremental order
 export function sortPersons(persons) {
   persons.sort((a, b) => a - b);
   return persons;
 };
 
+//This method extracts the month and year of the shifts
+//from a given shifts array
 export function getFileHeader(shiftsWithWorkHours) {
   let singleShift = this.getPersonDetails(shiftsWithWorkHours);
   let date = singleShift.date.split(".");
@@ -73,13 +87,16 @@ export function getFileHeader(shiftsWithWorkHours) {
   return "Monthly Wages " + month + "/" + year;
 };
 
+//This function iterates through the shifts and 
+//returns an array with the total wage for each person
 export function calculateMonthlyWageForAllThePersons(shiftsWithWorkHours, uniquePersons) {
-  //Now separate each person from the list using their id
   return uniquePersons.map(id => {
     return this.calculateMonthlyWage(shiftsWithWorkHours, id);
   });
 };
 
+//This function calculates the monthly wage of a person 
+//by filtering shifts using their id.
 export function calculateMonthlyWage(shiftsWithWorkHours, id) {
   //Extarct the shifts of the current person
   let shifts = this.getTheShiftsOfThePersonWithId(shiftsWithWorkHours, id);
@@ -96,16 +113,21 @@ export function calculateMonthlyWage(shiftsWithWorkHours, id) {
   });
 };
 
+//This method returns the shifts of a particular person filtered by their id.
 export function getTheShiftsOfThePersonWithId(shifts, id) {
   return shifts.filter(item => item.id == id);
 };
 
+//This function returns the details about a person from their shift,
+//including name, id, etc.
 export function getPersonDetails(shifts) {
   return shifts.reduce(function(acc, item) {
     return item;
   }, {});
 };
 
+//This function iterates through the shifts and addd the wage value
+//and returns the sum.
 export function calculateTotalWageForAllTheShifts(shifts) {
   return shifts.reduce(
     (prevValue, currentValue) => prevValue + currentValue.wage,
@@ -113,8 +135,8 @@ export function calculateTotalWageForAllTheShifts(shifts) {
   );
 };
 
+//This function combine the mutliple shifts of the same perosn on the same day
 export function combineMultipleShifts(shifts) {
-  //Combine mutliple shifts into one.
   let uniqueShifts = [];
   shifts.map(item => {
     //filter the current array to find if it already has the shift
@@ -137,7 +159,8 @@ export function combineMultipleShifts(shifts) {
   return uniqueShifts;
 };
 
-//Calculate wage for every day
+//This method iterates through all the shifts
+//and returns the shifts with its wage for each shift
 export function calculateWageForEachShift(uniqueShifts) {
   return uniqueShifts.map(shift => {
     return ({
@@ -147,6 +170,7 @@ export function calculateWageForEachShift(uniqueShifts) {
   });
 };
 
+//This method calculates the wage for a shift from the total hours and evening hours
 export function calculateWage(totalHours, eveningHours) {
   let overtimeHours = Math.max(0, totalHours - Constants.OVERTIME_THRESHOLD);
 
