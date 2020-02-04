@@ -37,31 +37,31 @@ export default class Landing extends Component {
       <View style={styles.wrapper}>
         <View style={styles.container}>
           <View style={styles.main}>
-            <View style={{ flex: 1, marginTop: 50, justifyContent: "flex-end", alignItems: "center" }}>
-              <Text style={{ padding: 20, fontSize: 24, width: 300, textAlign: "center", color: 'gold' }}>
-                Monthly Wages</Text>
+            <View style={styles.headerView}>
+              <Text style={styles.headerText}>Monthly Wages</Text>
               <Image
-                style={{ width: 150, height: 150 }}
-                source={require('../images/dollar.png')}
+                style={styles.headerImage}
+                source={require("../images/dollar.png")}
               />
-              <Text style={{ padding: 20, fontSize: 20, width: 300, textAlign: "center" }}>Seamlessly calculates
-             monthly wages</Text>
+              <Text style={styles.description}>
+                Seamlessly calculates monthly wages
+              </Text>
             </View>
-            <View style={{ flex: 1, justifyContent: "center" }}>
+            <View style={styles.bottomView}>
               <Button
                 title="Upload CSV File"
-                buttonStyle={{ width: "100%", marginBottom: 20, borderColor: '#FFD700', backgroundColor: '#FFD700' }}
+                buttonStyle={styles.uploadButton}
                 color="black"
                 onPress={this.openCSVFile}
                 type="outline"
-                titleStyle={{ color: 'black' }}
+                titleStyle={styles.buttonTitle}
               />
               <Button
                 title="Load test CSV File"
-                buttonStyle={{ width: "100%", borderColor: '#FFD700', backgroundColor: '#FFD700' }}
+                buttonStyle={styles.loadButton}
                 onPress={this.loadTestFile}
                 type="outline"
-                titleStyle={{ color: 'black' }}
+                titleStyle={styles.buttonTitle}
               />
             </View>
           </View>
@@ -181,7 +181,7 @@ export default class Landing extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#DF6E57'
+    backgroundColor: "#DF6E57"
   },
   container: {
     flex: 1,
@@ -210,7 +210,48 @@ const styles = StyleSheet.create({
   },
   main: {
     alignContent: "center",
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "space-around"
+  },
+  headerView: {
+    flex: 1,
+    marginTop: 50,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  },
+  headerText: {
+    padding: 20,
+    fontSize: 24,
+    width: 300,
+    textAlign: "center",
+    color: "gold"
+  },
+  headerImage: {
+    width: 150,
+    height: 150
+  },
+  description: {
+    padding: 20,
+    fontSize: 20,
+    width: 300,
+    textAlign: "center"
+  },
+  bottomView: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  uploadButton: {
+    width: "100%",
+    marginBottom: 20,
+    borderColor: "#FFD700",
+    backgroundColor: "#FFD700"
+  },
+  loadButton: {
+    width: "100%",
+    borderColor: "#FFD700",
+    backgroundColor: "#FFD700"
+  },
+  buttonTitle: {
+    color: "black"
   }
 });

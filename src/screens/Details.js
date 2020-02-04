@@ -77,7 +77,7 @@ export default class Details extends Component {
           keyExtractor={item => item.date}
           ListHeaderComponent={this.renderHeader(name)}
           stickyHeaderIndices={[0]}
-          rightTitleStyle={{ color: 'gold' }}
+          rightTitleStyle={styles.gold}
         />
       </View>
     );
@@ -124,5 +124,8 @@ const styles = StyleSheet.create({
   },
   flatList: {
     backgroundColor: '#DF6E57'
+  },
+  gold: {
+    color: 'gold'
   }
 });

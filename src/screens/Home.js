@@ -36,11 +36,11 @@ export default class Home extends Component {
     <View style={styles.header}>
       <Text style={styles.headerText}>Monthly Wages</Text>
       <Button title="Export data"
-        buttonStyle={{ borderColor: '#FFD700', backgroundColor: '#FFD700' }}
+        buttonStyle={styles.exportButton}
         onPress={this.saveToFile}
         type="outline"
         color="white"
-        titleStyle={{ color: 'black' }}
+        titleStyle={styles.exportTitle}
       />
     </View>
   )
@@ -59,10 +59,10 @@ export default class Home extends Component {
                 key={index}
                 title={item.name}
                 rightTitle={'$' + item.wage}
-                rightTitleStyle={{ color: 'gold' }}
+                rightTitleStyle={styles.gold}
                 leftAvatar={{ source: { uri: 'https://i.picsum.photos/id/' + index + '/200/200.jpg' } }}
                 bottomDivider
-                chevron={{ color: 'gold' }}
+                chevron={styles.gold}
               />
             </TouchableOpacity>
           }
@@ -147,5 +147,15 @@ const styles = StyleSheet.create({
   },
   flatList: {
     backgroundColor: '#DF6E57'
+  },
+  exportButton: { 
+    borderColor: '#FFD700', 
+    backgroundColor: '#FFD700' 
+  },
+  exportTitle: { 
+    color: 'black' 
+  },
+  gold: { 
+    color: 'gold' 
   }
 });
