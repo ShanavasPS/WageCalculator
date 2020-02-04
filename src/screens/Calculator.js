@@ -15,7 +15,7 @@ export function extractShiftsFromCSVFile(contents) {
   splitShifts.map(item => {
     let shift = item.split(",");
     //Make sure the entry has a valid id
-    if (shift[1] != undefined) {
+    if (shift.length == 5 && shift[1] != undefined) {
       shifts.push({
         name: shift[0],
         id: shift[1],
