@@ -6,30 +6,36 @@
  * @flow
  */
 import React, { Component } from "react";
-import { TouchableOpacity, FlatList, View, Text, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  FlatList,
+  View,
+  Text,
+  StyleSheet
+} from "react-native";
 import { Navigation } from "react-native-navigation";
-import { Button } from 'react-native-elements';
+import { Button } from "react-native-elements";
 var RNFS = require("react-native-fs");
 import { ListItem } from "react-native-elements";
-import { showOKAlert, getTopBar } from "./Common"
+import { showOKAlert, getTopBar } from "./Common";
 
 export default class Home extends Component {
   static get options() {
     return getTopBar("Report");
   }
 
-  renderHeader = (fileHeader) => (
+  renderHeader = fileHeader =>
     <View style={styles.header}>
       <Text style={styles.headerText}>Monthly Wages</Text>
-      <Button title="Export data"
+      <Button
+        title="Export data"
         buttonStyle={styles.exportButton}
         onPress={this.saveToFile}
         type="outline"
         color="white"
         titleStyle={styles.exportTitle}
       />
-    </View>
-  )
+    </View>;
 
   render() {
     const { monthlyWages, fileHeader } = this.props;
@@ -38,20 +44,25 @@ export default class Home extends Component {
         <FlatList
           data={monthlyWages}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => this.goToDetails(item.id, item.name)}>
+            <TouchableOpacity
+              onPress={() => this.goToDetails(item.id, item.name)}
+            >
               <ListItem
                 containerStyle={styles.flatList}
                 roundAvatar
                 key={index}
                 title={item.name}
-                rightTitle={'$' + item.wage}
+                rightTitle={"$" + item.wage}
                 rightTitleStyle={styles.gold}
-                leftAvatar={{ source: { uri: 'https://i.picsum.photos/id/' + index + '/200/200.jpg' } }}
+                leftAvatar={{
+                  source: {
+                    uri: "https://i.picsum.photos/id/" + index + "/200/200.jpg"
+                  }
+                }}
                 bottomDivider
                 chevron={styles.gold}
               />
-            </TouchableOpacity>
-          }
+            </TouchableOpacity>}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={() => this.renderHeader(fileHeader)}
           keyExtractor={item => item.id}
@@ -71,13 +82,24 @@ export default class Home extends Component {
       );
     });
 
-    let filename = "monthlywages.txt";
-    let path = RNFS.DocumentDirectoryPath + "/" + filename;
+    let filename = "MonthlyWages.txt";
+    let dirPath =
+      Platform.OS == "ios"
+        ? RNFS.DocumentDirectoryPath
+        : RNFS.ExternalDirectoryPath;
+    let path = dirPath + "/" + filename;
 
     // write the file
     RNFS.writeFile(path, fileContents.join("\n"), "utf8")
       .then(success => {
-        showOKAlert("Save success", "The monthly wages has been successfully saved to " + filename);
+        let savePath =
+          Platform.OS == "ios"
+            ? "Files/On My iPhone/MonthlyWage/MonthlyWages.txt"
+            : "Android/data/com.monthlywage/files/MonthlyWages.txt";
+        showOKAlert(
+          "Save success",
+          "The monthly wages has been successfully saved to " + savePath
+        );
       })
       .catch(err => {
         showOKAlert("Save failed", err.message);
@@ -93,7 +115,7 @@ export default class Home extends Component {
         name: "DetailsScreen",
         passProps: {
           detailedShifts,
-          name,
+          name
         }
       }
     });
@@ -104,7 +126,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 2,
     justifyContent: "center",
-    backgroundColor: '#DF6E57'
+    backgroundColor: "#DF6E57"
   },
   buttonGroup: {
     flexDirection: "row",
@@ -112,36 +134,36 @@ const styles = StyleSheet.create({
     marginBottom: 100
   },
   buttonStyle: {
-    borderColor: 'red',
-    backgroundColor: '#FFD700',
-    width: "100%",
+    borderColor: "red",
+    backgroundColor: "#FFD700",
+    width: "100%"
   },
   header: {
     padding: 20,
-    borderBottomColor: '#FFD700',
+    borderBottomColor: "#FFD700",
     borderBottomWidth: 0.5,
-    backgroundColor: '#DF6E57',
-    borderTopColor: '#FFD700',
+    backgroundColor: "#DF6E57",
+    borderTopColor: "#FFD700",
     borderTopWidth: 0.5,
     alignItems: "center",
     justifyContent: "space-around",
-    flexDirection: "row",
+    flexDirection: "row"
   },
   headerText: {
     fontSize: 16,
-    alignItems: "center",
+    alignItems: "center"
   },
   flatList: {
-    backgroundColor: '#DF6E57'
+    backgroundColor: "#DF6E57"
   },
-  exportButton: { 
-    borderColor: '#FFD700', 
-    backgroundColor: '#FFD700' 
+  exportButton: {
+    borderColor: "#FFD700",
+    backgroundColor: "#FFD700"
   },
-  exportTitle: { 
-    color: 'black' 
+  exportTitle: {
+    color: "black"
   },
-  gold: { 
-    color: 'gold' 
+  gold: {
+    color: "gold"
   }
 });
