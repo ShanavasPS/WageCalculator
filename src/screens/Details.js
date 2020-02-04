@@ -11,10 +11,8 @@ import {
   FlatList,
   View,
   Text,
-  ActivityIndicator,
   StyleSheet
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
 import { ListItem } from "react-native-elements";
 
 export default class Details extends Component {

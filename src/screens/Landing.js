@@ -10,18 +10,14 @@ import React, { Component } from "react";
 import { Navigation } from "react-native-navigation";
 import {
   View,
-  StyleSheet,
-  Alert
+  StyleSheet
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-
-import * as Constants from "../../constants";
-import FileViewer from "react-native-file-viewer";
 import DocumentPicker from "react-native-document-picker";
 import { Button } from 'react-native-elements';
 import * as Calculator from "./Calculator";
 
 var RNFS = require("react-native-fs");
+import {showOKAlert } from "./Common"
 
 export default class Landing extends Component {
   static get options() {
@@ -96,12 +92,7 @@ export default class Landing extends Component {
         this.calculateMonthlyWages(contents);
       })
       .catch(err => {
-        Alert.alert(
-          "Failed to read file",
-          "Please upload a valid csv file",
-          [{ text: "OK" }],
-          { cancelable: false }
-        );
+        showOKAlert("Failed to read file", "Please upload a valid csv file");
       });
   };
 
@@ -112,12 +103,7 @@ export default class Landing extends Component {
         this.calculateMonthlyWages(contents);
       })
       .catch(err => {
-        Alert.alert(
-          "Failed to read file",
-          "Please upload a valid csv file",
-          [{ text: "OK" }],
-          { cancelable: false }
-        );
+        showOKAlert("Failed to read file", "Please upload a valid csv file");
       });
   };
 

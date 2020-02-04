@@ -6,12 +6,12 @@
  * @flow
  */
 import React, { Component } from "react";
-import { TouchableOpacity, FlatList, Alert, View, Text, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
+import { TouchableOpacity, FlatList, View, Text, StyleSheet } from "react-native";
 import { Navigation } from "react-native-navigation";
 import { Button } from 'react-native-elements';
 var RNFS = require("react-native-fs");
-import { List, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
+import {showOKAlert } from "./Common"
 
 export default class Home extends Component {
   static get options() {
@@ -78,24 +78,16 @@ export default class Home extends Component {
       );
     });
 
-    let filename = "output.txt";
+    let filename = "monthlywages.txt";
     let path = RNFS.DocumentDirectoryPath + "/" + filename;
 
     // write the file
     RNFS.writeFile(path, fileContents.join("\n"), "utf8")
       .then(success => {
-        Alert.alert(
-          "Save success",
-          "The monthly wages has been successfully saved to " + filename,
-          [{ text: "OK" }],
-          { cancelable: false }
-        );
+        showOKAlert("Save success", "The monthly wages has been successfully saved to " + filename);
       })
       .catch(err => {
-        console.log(err.message);
-        Alert.alert("Save failed", err.message, [{ text: "OK" }], {
-          cancelable: false
-        });
+        showOKAlert("Save failed", err.message);
       });
   };
 
