@@ -26,7 +26,7 @@ export default class Home extends Component {
 
   renderHeader = fileHeader =>
     <View style={styles.header}>
-      <Text style={styles.headerText}>Monthly Wages</Text>
+      <Text style={styles.headerText}>{fileHeader}</Text>
       <Button
         title="Export"
         buttonStyle={styles.exportButton}

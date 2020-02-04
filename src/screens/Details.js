@@ -79,7 +79,7 @@ export default class Details extends Component {
   }
 
   saveToFile = (id) => {
-    let filename = "MonthlyWagesDetails_" + id + ".txt";
+    let filename = "MonthlyWagesDetails_" + id + ".csv";
     let fileContents = this.getFileContents();
     writeToFile(filename, fileContents);
   };
