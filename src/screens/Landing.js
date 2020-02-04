@@ -114,9 +114,9 @@ export default class Landing extends Component {
   //from the given CSV file
   calculateMonthlyWages = contents => {
     //First, extract the shifts from the CSV file
-    let shifts = this.extractShiftsFromCSVFile(contents);
-    //then removes the header and footer inorder to removed invalid values
-    shifts = Calculator.removeHeaderAndFooter(shifts);
+    let shifts = Calculator.extractShiftsFromCSVFile(contents);
+    //then removes the header inorder to remove invalid values
+    shifts = Calculator.removeHeader(shifts);
 
     //Calculate total hours and evening hours
     shifts = Calculator.calculateTotalAndEveningHours(shifts);
@@ -161,22 +161,6 @@ export default class Landing extends Component {
         }
       }
     });
-
-  //Method extracts shifts from a given CSV file
-  extractShiftsFromCSVFile(contents) {
-    var splitShifts = contents.split("\n");
-    let shifts = splitShifts.map(item => {
-      let shift = item.split(",");
-      return {
-        name: shift[0],
-        id: shift[1],
-        date: shift[2],
-        start: shift[3],
-        end: shift[4]
-      };
-    });
-    return shifts;
-  }
 }
 //
 

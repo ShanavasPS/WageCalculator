@@ -8,16 +8,32 @@
 
 import * as Constants from "../../constants";
 
-//This function removes the header and footer from 
+//Method extracts shifts from a given CSV file
+export function extractShiftsFromCSVFile(contents) {
+  var splitShifts = contents.split("\n");
+  var shifts = [];
+  splitShifts.map(item => {
+    let shift = item.split(",");
+    //Make sure the entry has a valid id
+    if (shift[1] != undefined) {
+      shifts.push({
+        name: shift[0],
+        id: shift[1],
+        date: shift[2],
+        start: shift[3],
+        end: shift[4]
+      })
+    }
+  });
+  return shifts;
+}
+
+//This function removes the header from 
 //a given shift so it only has proper shift data
-export function removeHeaderAndFooter(shifts) {
+export function removeHeader(shifts) {
   //Remove the header from the CSV file format
   if(shifts.length >0) {
     shifts.splice(0, 1);
-  }
-  //Remove the last blank entry
-  if(shifts.length >0) {
-    shifts.splice(shifts.length - 1, 1);
   }
   return shifts;
 };
@@ -223,7 +239,7 @@ export function getOvertimeWage(overtimeHours) {
     quarterOvertimeHours * Constants.QUARTER_OVERTIME_RATE +
     halfOvertimeHours * Constants.HALF_OVERTIME_RATE +
     fullOvertimeHours * Constants.FULL_OVERTIME_RATE;
-  return overtimeWage;
+  return parseFloat(overtimeWage.toFixed(2));
 };
 
 //This method calculates the hours between the control and hours
