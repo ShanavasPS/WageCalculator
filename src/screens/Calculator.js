@@ -6,7 +6,6 @@
  * @flow
  */
 
-import React, { Component } from "react";
 import * as Constants from "../../constants";
 
 //This function removes the header and footer from 
@@ -27,7 +26,7 @@ export function removeHeaderAndFooter(shifts) {
 //and calculates the total and evening hours
 export function calculateTotalAndEveningHours(shifts) {
   return shifts.map(shift => {
-    return this.calculateTotalAndEveningHoursForShift(shift);
+    return calculateTotalAndEveningHoursForShift(shift);
   });
 };
 
@@ -37,7 +36,7 @@ export function calculateOvertimeHours(shifts) {
   return shifts.map(shift => {
     return ({
       ...shift,
-      overtimeHours: this.getOvertimeHours(shift.totalHours)
+      overtimeHours: getOvertimeHours(shift.totalHours)
     });
   });
 };
@@ -77,7 +76,7 @@ export function sortPersons(persons) {
 //This method extracts the month and year of the shifts
 //from a given shifts array
 export function getFileHeader(shiftsWithWorkHours) {
-  let singleShift = this.getPersonDetails(shiftsWithWorkHours);
+  let singleShift = getPersonDetails(shiftsWithWorkHours);
   let date = singleShift.date.split(".");
   let month = date[1];
   if (month.length < 2) {
@@ -91,7 +90,7 @@ export function getFileHeader(shiftsWithWorkHours) {
 //returns an array with the total wage for each person
 export function calculateMonthlyWageForAllThePersons(shiftsWithWorkHours, uniquePersons) {
   return uniquePersons.map(id => {
-    return this.calculateMonthlyWage(shiftsWithWorkHours, id);
+    return calculateMonthlyWage(shiftsWithWorkHours, id);
   });
 };
 
@@ -99,11 +98,11 @@ export function calculateMonthlyWageForAllThePersons(shiftsWithWorkHours, unique
 //by filtering shifts using their id.
 export function calculateMonthlyWage(shiftsWithWorkHours, id) {
   //Extarct the shifts of the current person
-  let shifts = this.getTheShiftsOfThePersonWithId(shiftsWithWorkHours, id);
+  let shifts = getTheShiftsOfThePersonWithId(shiftsWithWorkHours, id);
 
-  let totalWage = this.calculateTotalWageForAllTheShifts(shifts);
+  let totalWage = calculateTotalWageForAllTheShifts(shifts);
 
-  let person = this.getPersonDetails(shifts);
+  let person = getPersonDetails(shifts);
 
   return ({
     id: person.id,
@@ -165,7 +164,7 @@ export function calculateWageForEachShift(uniqueShifts) {
   return uniqueShifts.map(shift => {
     return ({
       ...shift,
-      wage: this.calculateWage(shift.totalHours, shift.eveningHours)
+      wage: calculateWage(shift.totalHours, shift.eveningHours)
     });
   });
 };
@@ -185,7 +184,7 @@ export function calculateWage(totalHours, eveningHours) {
   let eveningWage = eveningHours * Constants.EVENING_COMPENSATION_RATE;
 
   //calculate the Overtime wage
-  let overtimeWage = this.getOvertimeWage(overtimeHours);
+  let overtimeWage = getOvertimeWage(overtimeHours);
 
   //Total daily pay = Regular daily wage + Evening work compensation
   // + Overtime compensation
@@ -200,21 +199,21 @@ export function getOvertimeWage(overtimeHours) {
   let overtimeWage = 0;
 
   //Find the overtime hours eligible for additional quarter hourly rate
-  let quarterOvertimeHours = this.getOvertime(
+  let quarterOvertimeHours = getOvertime(
     0,
     Constants.QUARTER_OVERTIME_THRESHOLD,
     overtimeHours
   );
 
   //Find the overtime hours eligible for additional half hourly rate
-  let halfOvertimeHours = this.getOvertime(
+  let halfOvertimeHours = getOvertime(
     Constants.QUARTER_OVERTIME_THRESHOLD,
     Constants.HALF_OVERTIME_THRESHOLD,
     overtimeHours
   );
 
   //Find the overtime hours eligible for additional full hourly rate
-  let fullOvertimeHours = this.getOvertime(
+  let fullOvertimeHours = getOvertime(
     Constants.HALF_OVERTIME_THRESHOLD,
     overtimeHours,
     overtimeHours
@@ -235,10 +234,10 @@ export function getOvertime(control, limit, hours) {
 
 //Calculate the total hours and evening hours for a given shift
 export function calculateTotalAndEveningHoursForShift(shift) {
-  let startHour = this.getHoursFromTime(shift.start);
-  let endHour = this.getHoursFromTime(shift.end);
+  let startHour = getHoursFromTime(shift.start);
+  let endHour = getHoursFromTime(shift.end);
   let totalHours = Math.abs(endHour - startHour);
-  let eveningHours = this.calculateEveningHours(totalHours, startHour, endHour);
+  let eveningHours = calculateEveningHours(totalHours, startHour, endHour);
 
   return ({
     ...shift,
@@ -250,7 +249,7 @@ export function calculateTotalAndEveningHoursForShift(shift) {
 //Calculates the evening hours worked for the given time periods
 export function calculateEveningHours(totalHours, startHour, endHour) {
   let eveningHours =
-    this.getEveningHours(startHour) + this.getEveningHours(endHour);
+    getEveningHours(startHour) + getEveningHours(endHour);
   //Making sure evening hours are not greater than total hours
   //in case the shift started and ended within the evening time
   eveningHours = Math.min(totalHours, eveningHours);
