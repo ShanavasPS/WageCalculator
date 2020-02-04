@@ -16,3 +16,36 @@ export function showOKAlert(title, description) {
     { cancelable: false }
   );
 };
+
+export function getTopBar(title) {
+  return {
+    topBar: {
+      backButton: {
+        color: 'gold'
+      },
+      visible: true,
+      title: {
+        text: title,
+        fontSize: 18
+      },
+      background: {
+        color: '#DF6E57'
+      }
+    }
+  };
+}
+
+export function getHeader(title) {
+  return {
+    topBar: {
+      visible: false,
+      title: {
+        text: title,
+        fontSize: 18
+      },
+      background: {
+        color: '#DF6E57'
+      }
+    }
+  };
+}

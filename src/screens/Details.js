@@ -9,24 +9,11 @@
 import React, { Component } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
+import { getTopBar } from "./Common"
 
 export default class Details extends Component {
   static get options() {
-    return {
-      topBar: {
-        backButton: {
-          color: 'gold'
-        },
-        visible: true,
-        title: {
-          text: "Details",
-          fontSize: 18
-        },
-        background: {
-          color: '#DF6E57'
-        },
-      }
-    };
+    return getTopBar("Details");
   }
 
   renderHeader = name =>

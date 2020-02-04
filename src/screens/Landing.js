@@ -14,22 +14,11 @@ import { Button } from "react-native-elements";
 import * as Calculator from "./Calculator";
 
 var RNFS = require("react-native-fs");
-import { showOKAlert } from "./Common";
+import { showOKAlert, getHeader } from "./Common";
 
 export default class Landing extends Component {
   static get options() {
-    return {
-      topBar: {
-        title: {
-          text: "Monthly Wages",
-          fontSize: 18
-        },
-        visible: false,
-        background: {
-          color: "#DF6E57"
-        }
-      }
-    };
+    return getHeader("Monthly Wages");
   }
 
   render() {

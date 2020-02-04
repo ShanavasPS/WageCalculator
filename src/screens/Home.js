@@ -11,25 +11,11 @@ import { Navigation } from "react-native-navigation";
 import { Button } from 'react-native-elements';
 var RNFS = require("react-native-fs");
 import { ListItem } from "react-native-elements";
-import { showOKAlert } from "./Common"
+import { showOKAlert, getTopBar } from "./Common"
 
 export default class Home extends Component {
   static get options() {
-    return {
-      topBar: {
-        backButton: {
-          color: 'gold'
-        },
-        visible: true,
-        title: {
-          text: "Report",
-          fontSize: 18
-        },
-        background: {
-          color: '#DF6E57'
-        }
-      }
-    };
+    return getTopBar("Report");
   }
 
   renderHeader = (fileHeader) => (
