@@ -29,7 +29,7 @@ export default class Home extends Component {
     <View style={styles.header}>
       <Text style={styles.headerText}>Monthly Wages</Text>
       <Button
-        title="Export data"
+        title="Export"
         buttonStyle={styles.exportButton}
         onPress={this.saveToFile}
         type="outline"
@@ -115,7 +115,8 @@ export default class Home extends Component {
         name: "DetailsScreen",
         passProps: {
           detailedShifts,
-          name
+          name,
+          id
         }
       }
     });

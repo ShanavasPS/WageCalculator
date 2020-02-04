@@ -8,23 +8,33 @@
 
 import React, { Component } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
-import { ListItem } from "react-native-elements";
-import { getTopBar } from "./Common"
+import { ListItem, Button } from "react-native-elements";
+import { showOKAlert, getTopBar } from "./Common"
+var RNFS = require("react-native-fs");
+import FileViewer from "react-native-file-viewer";
 
 export default class Details extends Component {
   static get options() {
     return getTopBar("Details");
   }
 
-  renderHeader = name =>
+  renderHeader = (name, id) =>
     <View style={styles.header}>
       <Text style={styles.headerText}>
-        Wage Details for {name}
+        Wage for {name}
       </Text>
+      <Button
+        title="Export"
+        buttonStyle={styles.exportButton}
+        onPress={() => this.saveToFile(id)}
+        type="outline"
+        color="white"
+        titleStyle={styles.exportTitle}
+      />
     </View>;
 
   render() {
-    const { name, detailedShifts } = this.props;
+    const { name, detailedShifts, id } = this.props;
     return (
       <View style={styles.wrapper}>
         <FlatList
@@ -62,14 +72,49 @@ export default class Details extends Component {
               bottomDivider
             />}
           keyExtractor={item => item.date}
-          ListHeaderComponent={this.renderHeader(name)}
+          ListHeaderComponent={this.renderHeader(name, id)}
           stickyHeaderIndices={[0]}
           rightTitleStyle={styles.gold}
         />
       </View>
     );
   }
+  saveToFile = (id) => {
+    const { detailedShifts } = this.props;
+    let fileContents = [];
+    let fileHeader = "Date, Total Hours, Evening Hours, Overtime Hours, Wage"
+    fileContents.push(fileHeader);
+    detailedShifts.map(item => {
+      fileContents.push(
+        item.date + ", " + item.totalHours + ", " + item.eveningHours + ", " + item.overtimeHours + ", " + item.wage
+      );
+    });
+
+    let filename = "MonthlyWagesDetails_" + id + ".txt";
+    let dirPath =
+      Platform.OS == "ios"
+        ? RNFS.DocumentDirectoryPath
+        : RNFS.ExternalDirectoryPath;
+    let path = dirPath + "/" + filename;
+
+    // write the file
+    RNFS.writeFile(path, fileContents.join("\n"), "utf8")
+      .then(success => {
+        FileViewer.open(path, { showOpenWithDialog: true }) // absolute-path-to-my-local-file.
+          .then(() => {
+            // success
+          })
+          .catch(error => {
+            showOKAlert("Save failed", err.message);
+          });
+      })
+      .catch(err => {
+        showOKAlert("Save failed", err.message);
+      });
+  };
 }
+
+
 //
 
 const styles = StyleSheet.create({
@@ -100,11 +145,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#DF6E57',
     borderTopColor: '#FFD700',
     borderTopWidth: 0.5,
-    alignItems: "center"
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   headerText: {
     fontSize: 16,
-    alignItems: "center"
+    alignItems: "center",
   },
   wrapper: {
     backgroundColor: '#DF6E57'
@@ -114,5 +161,12 @@ const styles = StyleSheet.create({
   },
   gold: {
     color: 'gold'
-  }
+  },
+  exportButton: {
+    borderColor: "#FFD700",
+    backgroundColor: "#FFD700"
+  },
+  exportTitle: {
+    color: "black"
+  },
 });
