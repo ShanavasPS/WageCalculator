@@ -17,8 +17,7 @@ import { Navigation } from "react-native-navigation";
 import { Button } from "react-native-elements";
 var RNFS = require("react-native-fs");
 import { ListItem } from "react-native-elements";
-import { showOKAlert, getTopBar } from "./Common";
-import FileViewer from "react-native-file-viewer";
+import { getTopBar, writeToFile } from "./Common";
 
 export default class Home extends Component {
   static get options() {
@@ -74,6 +73,12 @@ export default class Home extends Component {
 
   //Method to save the shift data to a file in the directory folder
   saveToFile = () => {
+    let filename = "MonthlyWages.txt";
+    let fileContents = this.getFileContents();
+    writeToFile(filename, fileContents);
+  };
+
+  getFileContents = () => {
     const { monthlyWages, fileHeader } = this.props;
     let fileContents = [];
     fileContents.push(fileHeader);
@@ -82,29 +87,8 @@ export default class Home extends Component {
         item.id + ", " + item.name + ", $" + item.wage.toString()
       );
     });
-
-    let filename = "MonthlyWages.txt";
-    let dirPath =
-      Platform.OS == "ios"
-        ? RNFS.DocumentDirectoryPath
-        : RNFS.ExternalDirectoryPath;
-    let path = dirPath + "/" + filename;
-
-    // write the file
-    RNFS.writeFile(path, fileContents.join("\n"), "utf8")
-      .then(success => {
-        FileViewer.open(path, { showOpenWithDialog: true })
-          .then(() => {
-            // success
-          })
-          .catch(error => {
-            showOKAlert("Save failed", err.message);
-          });
-      })
-      .catch(err => {
-        showOKAlert("Save failed", err.message);
-      });
-  };
+    return fileContents;
+  }
 
   //Method to navigate to the selected shift
   goToDetails = (id, name) => {

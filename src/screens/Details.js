@@ -9,9 +9,7 @@
 import React, { Component } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { ListItem, Button } from "react-native-elements";
-import { showOKAlert, getTopBar } from "./Common"
-var RNFS = require("react-native-fs");
-import FileViewer from "react-native-file-viewer";
+import { getTopBar, writeToFile } from "./Common"
 
 export default class Details extends Component {
   static get options() {
@@ -79,7 +77,14 @@ export default class Details extends Component {
       </View>
     );
   }
+
   saveToFile = (id) => {
+    let filename = "MonthlyWagesDetails_" + id + ".txt";
+    let fileContents = this.getFileContents();
+    writeToFile(filename, fileContents);
+  };
+
+  getFileContents = () => {
     const { detailedShifts } = this.props;
     let fileContents = [];
     let fileHeader = "Date, Total Hours, Evening Hours, Overtime Hours, Wage"
@@ -89,33 +94,9 @@ export default class Details extends Component {
         item.date + ", " + item.totalHours + ", " + item.eveningHours + ", " + item.overtimeHours + ", " + item.wage
       );
     });
-
-    let filename = "MonthlyWagesDetails_" + id + ".txt";
-    let dirPath =
-      Platform.OS == "ios"
-        ? RNFS.DocumentDirectoryPath
-        : RNFS.ExternalDirectoryPath;
-    let path = dirPath + "/" + filename;
-
-    // write the file
-    RNFS.writeFile(path, fileContents.join("\n"), "utf8")
-      .then(success => {
-        FileViewer.open(path, { showOpenWithDialog: true }) // absolute-path-to-my-local-file.
-          .then(() => {
-            // success
-          })
-          .catch(error => {
-            showOKAlert("Save failed", err.message);
-          });
-      })
-      .catch(err => {
-        showOKAlert("Save failed", err.message);
-      });
-  };
+    return fileContents;
+  }
 }
-
-
-//
 
 const styles = StyleSheet.create({
   container: {
