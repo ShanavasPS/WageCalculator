@@ -11,20 +11,22 @@ import { Navigation } from "react-native-navigation";
 import { Button } from 'react-native-elements';
 var RNFS = require("react-native-fs");
 import { ListItem } from "react-native-elements";
-import {showOKAlert } from "./Common"
+import { showOKAlert } from "./Common"
 
 export default class Home extends Component {
   static get options() {
     return {
       topBar: {
+        backButton: {
+          color: 'gold'
+        },
         visible: true,
         title: {
           text: "Report",
-          color: '#2089DC',
           fontSize: 18
         },
         background: {
-          color: '#FBFCFC'
+          color: '#DF6E57'
         }
       }
     };
@@ -32,11 +34,13 @@ export default class Home extends Component {
 
   renderHeader = (fileHeader) => (
     <View style={styles.header}>
-      <Text style={styles.headerText}>{fileHeader}</Text>
-      <Button style={styles.buttonStyle}
-        title="Export data"
+      <Text style={styles.headerText}>Monthly Wages</Text>
+      <Button title="Export data"
+        buttonStyle={{ borderColor: '#FFD700', backgroundColor: '#FFD700' }}
         onPress={this.saveToFile}
         type="outline"
+        color="white"
+        titleStyle={{ color: 'black' }}
       />
     </View>
   )
@@ -50,13 +54,15 @@ export default class Home extends Component {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => this.goToDetails(item.id, item.name)}>
               <ListItem
+                containerStyle={styles.flatList}
                 roundAvatar
                 key={index}
                 title={item.name}
                 rightTitle={'$' + item.wage}
+                rightTitleStyle={{ color: 'gold' }}
                 leftAvatar={{ source: { uri: 'https://i.picsum.photos/id/' + index + '/200/200.jpg' } }}
                 bottomDivider
-                chevron
+                chevron={{ color: 'gold' }}
               />
             </TouchableOpacity>
           }
@@ -111,7 +117,8 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 2,
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: '#DF6E57'
   },
   buttonGroup: {
     flexDirection: "row",
@@ -119,13 +126,16 @@ const styles = StyleSheet.create({
     marginBottom: 100
   },
   buttonStyle: {
+    borderColor: 'red',
+    backgroundColor: '#FFD700',
+    width: "100%",
   },
   header: {
     padding: 20,
-    borderBottomColor: '#D0D3D4',
+    borderBottomColor: '#FFD700',
     borderBottomWidth: 0.5,
-    backgroundColor: '#FFFFFF',
-    borderTopColor: '#D0D3D4',
+    backgroundColor: '#DF6E57',
+    borderTopColor: '#FFD700',
     borderTopWidth: 0.5,
     alignItems: "center",
     justifyContent: "space-around",
@@ -133,6 +143,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    alignItems: "center"
+    alignItems: "center",
+  },
+  flatList: {
+    backgroundColor: '#DF6E57'
   }
 });

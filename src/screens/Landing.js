@@ -8,7 +8,7 @@
 
 import React, { Component } from "react";
 import { Navigation } from "react-native-navigation";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image, Text } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 import { Button } from "react-native-elements";
 import * as Calculator from "./Calculator";
@@ -20,14 +20,13 @@ export default class Landing extends Component {
   static get options() {
     return {
       topBar: {
-        visible: true,
         title: {
-          text: "Wage Calculator",
-          color: "#2089DC",
+          text: "Monthly Wages",
           fontSize: 18
         },
+        visible: false,
         background: {
-          color: "#FBFCFC"
+          color: "#DF6E57"
         }
       }
     };
@@ -38,18 +37,33 @@ export default class Landing extends Component {
       <View style={styles.wrapper}>
         <View style={styles.container}>
           <View style={styles.main}>
-            <Button
-              title="Upload CSV File"
-              buttonStyle={{ width: "100%", marginBottom: 20 }}
-              onPress={this.openCSVFile}
-              type="outline"
-            />
-            <Button
-              title="Load test CSV File"
-              buttonStyle={{ width: "100%" }}
-              onPress={this.loadTestFile}
-              type="outline"
-            />
+            <View style={{ flex: 1, marginTop: 50, justifyContent: "flex-end", alignItems: "center" }}>
+              <Text style={{ padding: 20, fontSize: 24, width: 300, textAlign: "center", color: 'gold' }}>
+                Monthly Wages</Text>
+              <Image
+                style={{ width: 150, height: 150 }}
+                source={require('../images/dollar.png')}
+              />
+              <Text style={{ padding: 20, fontSize: 20, width: 300, textAlign: "center" }}>Seamlessly calculates
+             monthly wages</Text>
+            </View>
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              <Button
+                title="Upload CSV File"
+                buttonStyle={{ width: "100%", marginBottom: 20, borderColor: '#FFD700', backgroundColor: '#FFD700' }}
+                color="black"
+                onPress={this.openCSVFile}
+                type="outline"
+                titleStyle={{ color: 'black' }}
+              />
+              <Button
+                title="Load test CSV File"
+                buttonStyle={{ width: "100%", borderColor: '#FFD700', backgroundColor: '#FFD700' }}
+                onPress={this.loadTestFile}
+                type="outline"
+                titleStyle={{ color: 'black' }}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -166,7 +180,8 @@ export default class Landing extends Component {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#DF6E57'
   },
   container: {
     flex: 1,
@@ -192,5 +207,10 @@ const styles = StyleSheet.create({
   },
   center: {
     alignSelf: "center"
+  },
+  main: {
+    alignContent: "center",
+    alignItems: 'center',
+    justifyContent: "space-around"
   }
 });

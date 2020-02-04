@@ -14,14 +14,17 @@ export default class Details extends Component {
   static get options() {
     return {
       topBar: {
+        backButton: {
+          color: 'gold'
+        },
         visible: true,
         title: {
           text: "Details",
           fontSize: 18
         },
         background: {
-          color: "#FBFCFC"
-        }
+          color: '#DF6E57'
+        },
       }
     };
   }
@@ -41,12 +44,13 @@ export default class Details extends Component {
           data={detailedShifts}
           renderItem={({ item, index }) =>
             <ListItem
+              containerStyle={styles.flatList}
               key={index}
               title={item.date}
               rightTitle={
-                  <Text style={styles.rightTitle}>
-                    ${item.wage}
-                  </Text>
+                <Text style={styles.rightTitle}>
+                  ${item.wage}
+                </Text>
               }
               subtitle={
                 <View style={styles.subtitle}>
@@ -59,7 +63,7 @@ export default class Details extends Component {
                 <View style={styles.rightSubtitle}>
                   <Text style={styles.rightSubtitle}>
                     {item.totalHours} h
-                  </Text> 
+                  </Text>
                   <Text style={styles.rightSubtitle}>
                     {item.eveningHours} h
                   </Text>
@@ -68,12 +72,12 @@ export default class Details extends Component {
                   </Text>
                 </View>
               }
-              containerStyle={{ alignItems: "flex-end" }}
               bottomDivider
             />}
           keyExtractor={item => item.date}
           ListHeaderComponent={this.renderHeader(name)}
           stickyHeaderIndices={[0]}
+          rightTitleStyle={{ color: 'gold' }}
         />
       </View>
     );
@@ -85,32 +89,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: '#DF6E57'
   },
   subtitle: {
     fontSize: 14,
-    padding: 5
+    padding: 5,
   },
   rightSubtitle: {
     alignItems: "flex-end",
-    color: "#808080"
+    color: "#2A2A2A",
   },
   rightTitle: {
     alignItems: "flex-end",
     fontSize: 16,
     paddingVertical: 5,
+    color: 'gold'
   },
   header: {
     padding: 20,
-    borderBottomColor: "#D0D3D4",
+    borderBottomColor: '#FFD700',
     borderBottomWidth: 0.5,
-    backgroundColor: "#FFFFFF",
-    borderTopColor: "#D0D3D4",
+    backgroundColor: '#DF6E57',
+    borderTopColor: '#FFD700',
     borderTopWidth: 0.5,
     alignItems: "center"
   },
   headerText: {
     fontSize: 16,
     alignItems: "center"
+  },
+  wrapper: {
+    backgroundColor: '#DF6E57'
+  },
+  flatList: {
+    backgroundColor: '#DF6E57'
   }
 });
