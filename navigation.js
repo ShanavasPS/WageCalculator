@@ -16,6 +16,20 @@ Navigation.registerComponent(`LandingScreen`, () => Landing);
 Navigation.registerComponent(`HomeScreen`, () => Home);
 Navigation.registerComponent(`DetailsScreen`, () => Details);
 
+Navigation.setDefaultOptions({
+  animations: {
+    setRoot: {
+      waitForRender: true,
+    },
+    put: {
+      waitForRender: true,
+    },
+    push: {
+      waitForRender: true,
+    },
+  },
+})
+
 export const goToLandingScreen = () =>
   Navigation.setRoot({
     root: {
