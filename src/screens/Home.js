@@ -93,7 +93,7 @@ export default class Home extends Component {
     // write the file
     RNFS.writeFile(path, fileContents.join("\n"), "utf8")
       .then(success => {
-        FileViewer.open(path) // absolute-path-to-my-local-file.
+        FileViewer.open(path, { showOpenWithDialog: true })
           .then(() => {
             // success
           })
