@@ -18,6 +18,7 @@ import { Button } from "react-native-elements";
 var RNFS = require("react-native-fs");
 import { ListItem } from "react-native-elements";
 import { showOKAlert, getTopBar } from "./Common";
+import FileViewer from "react-native-file-viewer";
 
 export default class Home extends Component {
   static get options() {
@@ -92,14 +93,13 @@ export default class Home extends Component {
     // write the file
     RNFS.writeFile(path, fileContents.join("\n"), "utf8")
       .then(success => {
-        let savePath =
-          Platform.OS == "ios"
-            ? "Files/On My iPhone/MonthlyWage/MonthlyWages.txt"
-            : "Android/data/com.monthlywage/files/MonthlyWages.txt";
-        showOKAlert(
-          "Save success",
-          "The monthly wages has been successfully saved to " + savePath
-        );
+        FileViewer.open(path) // absolute-path-to-my-local-file.
+          .then(() => {
+            // success
+          })
+          .catch(error => {
+            showOKAlert("Save failed", err.message);
+          });
       })
       .catch(err => {
         showOKAlert("Save failed", err.message);
