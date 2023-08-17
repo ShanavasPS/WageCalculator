@@ -1,4 +1,4 @@
-# Monthly Wage Calculator
+# Monthly Wage Calculator - Gofore Coding Challenge
 A React Native application to calculate the monthly wage of all the persons from a CSV file
 
 ## Setup Instructions
